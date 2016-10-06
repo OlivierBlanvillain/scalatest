@@ -724,7 +724,7 @@ object PosZInt {
   def from(value: Int): Option[PosZInt] =
     if (value >= 0) Some(new PosZInt(value)) else None
 
-  import language.experimental.macros
+  // import language.experimental.macros
   import scala.language.implicitConversions
 
   /**
@@ -759,7 +759,9 @@ object PosZInt {
    *     <code>Int</code> literal, the invocation of this method will not
    *     compile.)
    */
-  implicit def apply(value: Int): PosZInt = macro PosZIntMacro.apply // MM
+  implicit def apply(value: Int): PosZInt =
+    PosZInt.from(value).get
+    // macro PosZIntMacro.apply
 
   /**
    * Implicit widening conversion from <code>PosZInt</code> to
