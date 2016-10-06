@@ -23,6 +23,6 @@ private[scalactic] object DigitString {
   def from(value: String): Option[DigitString] =
     if (value.forall(c => c >= '0' && c <= '9')) Some(new DigitString(value)) else None
   import scala.language.experimental.macros
-  def apply(value: String): DigitString = macro DigitStringMacro.apply
+  def apply(value: String): DigitString = macro DigitStringMacro.apply // MM
 }
 

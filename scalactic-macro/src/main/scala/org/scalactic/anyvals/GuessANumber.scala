@@ -23,7 +23,7 @@ private[scalactic] object GuessANumber {
   def from(value: Int): Option[GuessANumber] =
     if (value >= 1 && value <= 10) Some(new GuessANumber(value)) else None
   import scala.language.experimental.macros
-  def apply(value: Int): GuessANumber = macro GuessANumberMacro.apply
+  def apply(value: Int): GuessANumber = macro GuessANumberMacro.apply // MM
 }
 
 private[scalactic] final class LGuessANumber private (val value: Long) extends AnyVal {
