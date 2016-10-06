@@ -3,8 +3,8 @@ import Keys._
 import java.net.{URL, URLClassLoader}
 import java.io.PrintWriter
 import scala.io.Source
-import com.typesafe.sbt.osgi.SbtOsgi._
-import com.typesafe.sbt.SbtPgp._
+// import com.typesafe.sbt.osgi.SbtOsgi._
+// import com.typesafe.sbt.SbtPgp._
 import org.scalajs.sbtplugin.ScalaJSPlugin
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 
@@ -127,9 +127,10 @@ object ScalatestBuild extends Build {
           </developer>
         </developers>
       ),
-    credentials += getNexusCredentials,
-    pgpSecretRing := file(getGPGFilePath),
-    pgpPassphrase := getGPGPassphase
+    credentials += getNexusCredentials
+    // ,
+    // pgpSecretRing := file(getGPGFilePath),
+    // pgpPassphrase := getGPGPassphase
   )
 
   lazy val scalatestDocSettings = Seq(
@@ -313,27 +314,27 @@ object ScalatestBuild extends Build {
       mappings in (Compile, packageSrc) ++= mappings.in(scalacticMacro, Compile, packageSrc).value,
       scalacticDocSourcesSetting,
       docTaskSetting
-    ).settings(osgiSettings: _*).settings(
-      OsgiKeys.exportPackage := Seq(
-        "org.scalactic",
-        "org.scalactic.anyvals",
-        "org.scalactic.exceptions",
-        "org.scalactic.source"
-      ),
-      OsgiKeys.importPackage := Seq(
-        "org.scalatest.*",
-        "org.scalactic.*",
-        "scala.util.parsing.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
-        "scala.xml.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
-        "scala.*;version=\"$<range;[==,=+);$<replace;"+scalaBinaryVersion.value+";-;.>>\"",
-        "*;resolution:=optional"
-      ),
-      OsgiKeys.additionalHeaders:= Map(
-        "Bundle-Name" -> "Scalactic",
-        "Bundle-Description" -> "Scalactic is an open-source library for Scala projects.",
-        "Bundle-DocURL" -> "http://www.scalactic.org/",
-        "Bundle-Vendor" -> "Artima, Inc."
-      )
+    )/*.settings(osgiSettings: _*)*/.settings(
+      // OsgiKeys.exportPackage := Seq(
+      //   "org.scalactic",
+      //   "org.scalactic.anyvals",
+      //   "org.scalactic.exceptions",
+      //   "org.scalactic.source"
+      // ),
+      // OsgiKeys.importPackage := Seq(
+      //   "org.scalatest.*",
+      //   "org.scalactic.*",
+      //   "scala.util.parsing.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
+      //   "scala.xml.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
+      //   "scala.*;version=\"$<range;[==,=+);$<replace;"+scalaBinaryVersion.value+";-;.>>\"",
+      //   "*;resolution:=optional"
+      // ),
+      // OsgiKeys.additionalHeaders:= Map(
+      //   "Bundle-Name" -> "Scalactic",
+      //   "Bundle-Description" -> "Scalactic is an open-source library for Scala projects.",
+      //   "Bundle-DocURL" -> "http://www.scalactic.org/",
+      //   "Bundle-Vendor" -> "Artima, Inc."
+      // )
     ).dependsOn(scalacticMacro % "compile-internal, test-internal").aggregate(LocalProject("scalactic-test"))  // avoid dependency in pom on non-existent scalactic-macro artifact, per discussion in http://grokbase.com/t/gg/simple-build-tool/133shekp07/sbt-avoid-dependence-in-a-macro-based-project
 
   lazy val scalacticJS = Project("scalacticJS", file("scalactic.js"))
@@ -353,27 +354,27 @@ object ScalatestBuild extends Build {
           GenScalacticJS.genResource((sourceManaged in Compile).value / "scala", version.value, scalaVersion.value)
         }.taskValue
       }
-    ).settings(osgiSettings: _*).settings(
-      OsgiKeys.exportPackage := Seq(
-        "org.scalactic",
-        "org.scalactic.anyvals",
-        "org.scalactic.exceptions",
-        "org.scalactic.source"
-      ),
-      OsgiKeys.importPackage := Seq(
-        "org.scalatest.*",
-        "org.scalactic.*",
-        "scala.util.parsing.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
-        "scala.xml.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
-        "scala.*;version=\"$<range;[==,=+);$<replace;"+scalaBinaryVersion.value+";-;.>>\"",
-        "*;resolution:=optional"
-      ),
-      OsgiKeys.additionalHeaders:= Map(
-        "Bundle-Name" -> "Scalactic",
-        "Bundle-Description" -> "Scalactic.js is an open-source library for Scala-js projects.",
-        "Bundle-DocURL" -> "http://www.scalactic.org/",
-        "Bundle-Vendor" -> "Artima, Inc."
-      )
+    )/*.settings(osgiSettings: _*)*/.settings(
+      // OsgiKeys.exportPackage := Seq(
+      //   "org.scalactic",
+      //   "org.scalactic.anyvals",
+      //   "org.scalactic.exceptions",
+      //   "org.scalactic.source"
+      // ),
+      // OsgiKeys.importPackage := Seq(
+      //   "org.scalatest.*",
+      //   "org.scalactic.*",
+      //   "scala.util.parsing.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
+      //   "scala.xml.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
+      //   "scala.*;version=\"$<range;[==,=+);$<replace;"+scalaBinaryVersion.value+";-;.>>\"",
+      //   "*;resolution:=optional"
+      // ),
+      // OsgiKeys.additionalHeaders:= Map(
+      //   "Bundle-Name" -> "Scalactic",
+      //   "Bundle-Description" -> "Scalactic.js is an open-source library for Scala-js projects.",
+      //   "Bundle-DocURL" -> "http://www.scalactic.org/",
+      //   "Bundle-Vendor" -> "Artima, Inc."
+      // )
     ).dependsOn(scalacticMacroJS % "compile-internal, test-internal").aggregate(LocalProject("scalacticTestJS")).enablePlugins(ScalaJSPlugin)
 
   lazy val scalacticTest = Project("scalactic-test", file("scalactic-test"))
@@ -455,47 +456,47 @@ object ScalatestBuild extends Build {
        }.taskValue
      },
      docTaskSetting
-   ).settings(osgiSettings: _*).settings(
-      OsgiKeys.exportPackage := Seq(
-        "org.scalatest",
-        "org.scalatest.concurrent",
-        "org.scalatest.easymock",
-        "org.scalatest.enablers",
-        "org.scalatest.events",
-        "org.scalatest.exceptions",
-        "org.scalatest.fixture",
-        "org.scalatest.jmock",
-        "org.scalatest.junit",
-        "org.scalatest.matchers",
-        "org.scalatest.mock",
-        "org.scalatest.mockito",
-        "org.scalatest.path",
-        "org.scalatest.prop",
-        "org.scalatest.refspec",
-        "org.scalatest.selenium",
-        "org.scalatest.tags",
-        "org.scalatest.tagobjects",
-        "org.scalatest.testng",
-        "org.scalatest.time",
-        "org.scalatest.tools",
-        "org.scalatest.verb",
-        "org.scalatest.words"
-      ),
-      OsgiKeys.importPackage := Seq(
-        "org.scalatest.*",
-        "org.scalactic.*",
-        "scala.util.parsing.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
-        "scala.xml.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
-        "scala.*;version=\"$<range;[==,=+);$<replace;"+scalaBinaryVersion.value+";-;.>>\"",
-        "*;resolution:=optional"
-      ),
-      OsgiKeys.additionalHeaders:= Map(
-        "Bundle-Name" -> "ScalaTest",
-        "Bundle-Description" -> "ScalaTest is an open-source test framework for the Java Platform designed to increase your productivity by letting you write fewer lines of test code that more clearly reveal your intent.",
-        "Bundle-DocURL" -> "http://www.scalatest.org/",
-        "Bundle-Vendor" -> "Artima, Inc.",
-        "Main-Class" -> "org.scalatest.tools.Runner"
-      )
+   )/*.settings(osgiSettings: _*)*/.settings(
+      // OsgiKeys.exportPackage := Seq(
+      //   "org.scalatest",
+      //   "org.scalatest.concurrent",
+      //   "org.scalatest.easymock",
+      //   "org.scalatest.enablers",
+      //   "org.scalatest.events",
+      //   "org.scalatest.exceptions",
+      //   "org.scalatest.fixture",
+      //   "org.scalatest.jmock",
+      //   "org.scalatest.junit",
+      //   "org.scalatest.matchers",
+      //   "org.scalatest.mock",
+      //   "org.scalatest.mockito",
+      //   "org.scalatest.path",
+      //   "org.scalatest.prop",
+      //   "org.scalatest.refspec",
+      //   "org.scalatest.selenium",
+      //   "org.scalatest.tags",
+      //   "org.scalatest.tagobjects",
+      //   "org.scalatest.testng",
+      //   "org.scalatest.time",
+      //   "org.scalatest.tools",
+      //   "org.scalatest.verb",
+      //   "org.scalatest.words"
+      // ),
+      // OsgiKeys.importPackage := Seq(
+      //   "org.scalatest.*",
+      //   "org.scalactic.*",
+      //   "scala.util.parsing.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
+      //   "scala.xml.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
+      //   "scala.*;version=\"$<range;[==,=+);$<replace;"+scalaBinaryVersion.value+";-;.>>\"",
+      //   "*;resolution:=optional"
+      // ),
+      // OsgiKeys.additionalHeaders:= Map(
+      //   "Bundle-Name" -> "ScalaTest",
+      //   "Bundle-Description" -> "ScalaTest is an open-source test framework for the Java Platform designed to increase your productivity by letting you write fewer lines of test code that more clearly reveal your intent.",
+      //   "Bundle-DocURL" -> "http://www.scalatest.org/",
+      //   "Bundle-Vendor" -> "Artima, Inc.",
+      //   "Main-Class" -> "org.scalatest.tools.Runner"
+      // )
    ).dependsOn(scalacticMacro % "compile-internal, test-internal", scalactic).aggregate(LocalProject("scalatest-test"))
 
   lazy val scalatestTest = Project("scalatest-test", file("scalatest-test"))
@@ -567,40 +568,40 @@ object ScalatestBuild extends Build {
         (baseDirectory, sourceManaged in Compile, version, scalaVersion) map genFiles("genversions", "GenVersions.scala")(GenVersions.genScalaTestVersions),*/
       //unmanagedResourceDirectories in Compile <+= sourceManaged( _ / "resources" ),
       scalatestJSDocTaskSetting
-    ).settings(osgiSettings: _*).settings(
-      OsgiKeys.exportPackage := Seq(
-        "org.scalatest",
-        "org.scalatest.compatible",
-        "org.scalatest.concurrent",
-        "org.scalatest.enablers",
-        "org.scalatest.events",
-        "org.scalatest.exceptions",
-        "org.scalatest.fixture",
-        "org.scalatest.matchers",
-        "org.scalatest.path",
-        "org.scalatest.prop",
-        "org.scalatest.tags",
-        "org.scalatest.tagobjects",
-        "org.scalatest.time",
-        "org.scalatest.tools",
-        "org.scalatest.verb",
-        "org.scalatest.words"
-      ),
-      OsgiKeys.importPackage := Seq(
-        "org.scalatest.*",
-        "org.scalactic.*",
-        "scala.util.parsing.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
-        "scala.xml.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
-        "scala.*;version=\"$<range;[==,=+);$<replace;"+scalaBinaryVersion.value+";-;.>>\"",
-        "*;resolution:=optional"
-      ),
-      OsgiKeys.additionalHeaders:= Map(
-        "Bundle-Name" -> "ScalaTest",
-        "Bundle-Description" -> "ScalaTest.js is an open-source test framework for the Javascript Platform designed to increase your productivity by letting you write fewer lines of test code that more clearly reveal your intent.",
-        "Bundle-DocURL" -> "http://www.scalatest.org/",
-        "Bundle-Vendor" -> "Artima, Inc.",
-        "Main-Class" -> "org.scalatest.tools.Runner"
-      )
+    )/*.settings(osgiSettings: _*)*/.settings(
+      // OsgiKeys.exportPackage := Seq(
+      //   "org.scalatest",
+      //   "org.scalatest.compatible",
+      //   "org.scalatest.concurrent",
+      //   "org.scalatest.enablers",
+      //   "org.scalatest.events",
+      //   "org.scalatest.exceptions",
+      //   "org.scalatest.fixture",
+      //   "org.scalatest.matchers",
+      //   "org.scalatest.path",
+      //   "org.scalatest.prop",
+      //   "org.scalatest.tags",
+      //   "org.scalatest.tagobjects",
+      //   "org.scalatest.time",
+      //   "org.scalatest.tools",
+      //   "org.scalatest.verb",
+      //   "org.scalatest.words"
+      // ),
+      // OsgiKeys.importPackage := Seq(
+      //   "org.scalatest.*",
+      //   "org.scalactic.*",
+      //   "scala.util.parsing.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
+      //   "scala.xml.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
+      //   "scala.*;version=\"$<range;[==,=+);$<replace;"+scalaBinaryVersion.value+";-;.>>\"",
+      //   "*;resolution:=optional"
+      // ),
+      // OsgiKeys.additionalHeaders:= Map(
+      //   "Bundle-Name" -> "ScalaTest",
+      //   "Bundle-Description" -> "ScalaTest.js is an open-source test framework for the Javascript Platform designed to increase your productivity by letting you write fewer lines of test code that more clearly reveal your intent.",
+      //   "Bundle-DocURL" -> "http://www.scalatest.org/",
+      //   "Bundle-Vendor" -> "Artima, Inc.",
+      //   "Main-Class" -> "org.scalatest.tools.Runner"
+      // )
     ).dependsOn(scalacticMacroJS % "compile-internal, test-internal", scalacticJS).aggregate(LocalProject("scalatestTestJS")).enablePlugins(ScalaJSPlugin)
 
   lazy val scalatestTestJS = Project("scalatestTestJS", file("scalatest-test.js"))
@@ -655,52 +656,52 @@ object ScalatestBuild extends Build {
         }.taskValue
       },
       unmanagedResourceDirectories in Compile <+= baseDirectory( _ / "scalatest" / "src" / "main" / "resources" )
-    ).settings(osgiSettings: _*).settings(
-      OsgiKeys.exportPackage := Seq(
-        "org.scalatest",
-        "org.scalatest.compatible",
-        "org.scalatest.concurrent",
-        "org.scalatest.easymock",
-        "org.scalatest.enablers",
-        "org.scalatest.events",
-        "org.scalatest.exceptions",
-        "org.scalatest.fixture",
-        "org.scalatest.jmock",
-        "org.scalatest.junit",
-        "org.scalatest.matchers",
-        "org.scalatest.mock",
-        "org.scalatest.mockito",
-        "org.scalatest.path",
-        "org.scalatest.prop",
-        "org.scalatest.refspec",
-        "org.scalatest.selenium",
-        "org.scalatest.tags",
-        "org.scalatest.tagobjects",
-        "org.scalatest.testng",
-        "org.scalatest.time",
-        "org.scalatest.tools",
-        "org.scalatest.verb",
-        "org.scalatest.words",
-        "org.scalactic",
-        "org.scalactic.anyvals",
-        "org.scalactic.exceptions",
-        "org.scalactic.source"
-      ),
-      OsgiKeys.importPackage := Seq(
-        "org.scalatest.*",
-        "org.scalactic.*",
-        "scala.util.parsing.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
-        "scala.xml.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
-        "scala.*;version=\"$<range;[==,=+);$<replace;"+scalaBinaryVersion.value+";-;.>>\"",
-        "*;resolution:=optional"
-      ),
-      OsgiKeys.additionalHeaders:= Map(
-        "Bundle-Name" -> "ScalaTest",
-        "Bundle-Description" -> "ScalaTest is an open-source test framework for the Java Platform designed to increase your productivity by letting you write fewer lines of test code that more clearly reveal your intent.",
-        "Bundle-DocURL" -> "http://www.scalatest.org/",
-        "Bundle-Vendor" -> "Artima, Inc.",
-        "Main-Class" -> "org.scalatest.tools.Runner"
-      )
+    )/*.settings(osgiSettings: _*)*/.settings(
+      // OsgiKeys.exportPackage := Seq(
+      //   "org.scalatest",
+      //   "org.scalatest.compatible",
+      //   "org.scalatest.concurrent",
+      //   "org.scalatest.easymock",
+      //   "org.scalatest.enablers",
+      //   "org.scalatest.events",
+      //   "org.scalatest.exceptions",
+      //   "org.scalatest.fixture",
+      //   "org.scalatest.jmock",
+      //   "org.scalatest.junit",
+      //   "org.scalatest.matchers",
+      //   "org.scalatest.mock",
+      //   "org.scalatest.mockito",
+      //   "org.scalatest.path",
+      //   "org.scalatest.prop",
+      //   "org.scalatest.refspec",
+      //   "org.scalatest.selenium",
+      //   "org.scalatest.tags",
+      //   "org.scalatest.tagobjects",
+      //   "org.scalatest.testng",
+      //   "org.scalatest.time",
+      //   "org.scalatest.tools",
+      //   "org.scalatest.verb",
+      //   "org.scalatest.words",
+      //   "org.scalactic",
+      //   "org.scalactic.anyvals",
+      //   "org.scalactic.exceptions",
+      //   "org.scalactic.source"
+      // ),
+      // OsgiKeys.importPackage := Seq(
+      //   "org.scalatest.*",
+      //   "org.scalactic.*",
+      //   "scala.util.parsing.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
+      //   "scala.xml.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
+      //   "scala.*;version=\"$<range;[==,=+);$<replace;"+scalaBinaryVersion.value+";-;.>>\"",
+      //   "*;resolution:=optional"
+      // ),
+      // OsgiKeys.additionalHeaders:= Map(
+      //   "Bundle-Name" -> "ScalaTest",
+      //   "Bundle-Description" -> "ScalaTest is an open-source test framework for the Java Platform designed to increase your productivity by letting you write fewer lines of test code that more clearly reveal your intent.",
+      //   "Bundle-DocURL" -> "http://www.scalatest.org/",
+      //   "Bundle-Vendor" -> "Artima, Inc.",
+      //   "Main-Class" -> "org.scalatest.tools.Runner"
+      // )
     ).dependsOn(scalacticMacro % "compile-internal, test-internal", scalactic % "compile-internal", scalatest % "compile-internal").aggregate(scalactic, scalatest)
 
   lazy val scalatestAppJS = Project("scalatestAppJS", file("scalatest-app.js"))
@@ -727,43 +728,43 @@ object ScalatestBuild extends Build {
           Seq.empty[File]
         }.taskValue
       }
-    ).settings(osgiSettings: _*).settings(
-      OsgiKeys.exportPackage := Seq(
-        "org.scalatest",
-        "org.scalatest.concurrent",
-        "org.scalatest.enablers",
-        "org.scalatest.events",
-        "org.scalatest.exceptions",
-        "org.scalatest.fixture",
-        "org.scalatest.matchers",
-        "org.scalatest.path",
-        "org.scalatest.prop",
-        "org.scalatest.tags",
-        "org.scalatest.tagobjects",
-        "org.scalatest.time",
-        "org.scalatest.tools",
-        "org.scalatest.verb",
-        "org.scalatest.words",
-        "org.scalactic",
-        "org.scalactic.anyvals",
-        "org.scalactic.exceptions",
-        "org.scalactic.source"
-      ),
-      OsgiKeys.importPackage := Seq(
-        "org.scalatest.*",
-        "org.scalactic.*",
-        "scala.util.parsing.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
-        "scala.xml.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
-        "scala.*;version=\"$<range;[==,=+);$<replace;"+scalaBinaryVersion.value+";-;.>>\"",
-        "*;resolution:=optional"
-      ),
-      OsgiKeys.additionalHeaders:= Map(
-        "Bundle-Name" -> "ScalaTest",
-        "Bundle-Description" -> "ScalaTest is an open-source test framework for the Java Platform designed to increase your productivity by letting you write fewer lines of test code that more clearly reveal your intent.",
-        "Bundle-DocURL" -> "http://www.scalatest.org/",
-        "Bundle-Vendor" -> "Artima, Inc.",
-        "Main-Class" -> "org.scalatest.tools.Runner"
-      )
+    )/*.settings(osgiSettings: _*)*/.settings(
+      // OsgiKeys.exportPackage := Seq(
+      //   "org.scalatest",
+      //   "org.scalatest.concurrent",
+      //   "org.scalatest.enablers",
+      //   "org.scalatest.events",
+      //   "org.scalatest.exceptions",
+      //   "org.scalatest.fixture",
+      //   "org.scalatest.matchers",
+      //   "org.scalatest.path",
+      //   "org.scalatest.prop",
+      //   "org.scalatest.tags",
+      //   "org.scalatest.tagobjects",
+      //   "org.scalatest.time",
+      //   "org.scalatest.tools",
+      //   "org.scalatest.verb",
+      //   "org.scalatest.words",
+      //   "org.scalactic",
+      //   "org.scalactic.anyvals",
+      //   "org.scalactic.exceptions",
+      //   "org.scalactic.source"
+      // ),
+      // OsgiKeys.importPackage := Seq(
+      //   "org.scalatest.*",
+      //   "org.scalactic.*",
+      //   "scala.util.parsing.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
+      //   "scala.xml.*;version=\"$<range;[==,=+);$<replace;1.0.4;-;.>>\"",
+      //   "scala.*;version=\"$<range;[==,=+);$<replace;"+scalaBinaryVersion.value+";-;.>>\"",
+      //   "*;resolution:=optional"
+      // ),
+      // OsgiKeys.additionalHeaders:= Map(
+      //   "Bundle-Name" -> "ScalaTest",
+      //   "Bundle-Description" -> "ScalaTest is an open-source test framework for the Java Platform designed to increase your productivity by letting you write fewer lines of test code that more clearly reveal your intent.",
+      //   "Bundle-DocURL" -> "http://www.scalatest.org/",
+      //   "Bundle-Vendor" -> "Artima, Inc.",
+      //   "Main-Class" -> "org.scalatest.tools.Runner"
+      // )
     ).dependsOn(scalacticMacroJS % "compile-internal, test-internal", scalacticJS % "compile-internal", scalatestJS % "compile-internal").aggregate(scalacticJS, scalatestJS).enablePlugins(ScalaJSPlugin)
 
   def gentestsLibraryDependencies =
