@@ -161,8 +161,8 @@ object ScalatestBuild extends Build {
 
   def scalaLibraries(theScalaVersion: String) =
     Seq(
-      "org.scala-lang" % "scala-compiler" % theScalaVersion % "provided",
-      "org.scala-lang" % "scala-reflect" % theScalaVersion // this is needed to compile macro
+      "org.scala-lang" % "scala-compiler" % theScalaVersion % "provided"
+      // "org.scala-lang" % "scala-reflect" % theScalaVersion // this is needed to compile macro
     )
 
   def scalatestLibraryDependencies =
@@ -1256,7 +1256,7 @@ object ScalatestBuild extends Build {
   val scalatestDocScalacOptionsSetting =
     scalacOptions in (Compile, doc) ++=
       Seq[String](
-        "-Ymacro-no-expand", // avoids need to separate out macros in docsrc dir
+        // "-Ymacro-no-expand", // avoids need to separate out macros in docsrc dir
         "-sourcepath", docsrcDir.value.getAbsolutePath,
         "-doc-title", projectTitle.value +" "+ releaseVersion,
         "-doc-source-url", scalatestDocSourceUrl)
@@ -1264,7 +1264,7 @@ object ScalatestBuild extends Build {
   val scalacticDocScalacOptionsSetting =
     scalacOptions in (Compile, doc) ++=
       Seq[String](
-        "-Ymacro-no-expand", // avoids need to separate out macros in docsrc dir
+        // "-Ymacro-no-expand", // avoids need to separate out macros in docsrc dir
         "-sourcepath", docsrcDir.value.getAbsolutePath,
         "-doc-title", projectTitle.value +" "+ releaseVersion,
         "-doc-source-url", scalacticDocSourceUrl)
