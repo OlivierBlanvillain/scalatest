@@ -20,7 +20,7 @@ import org.scalactic._
 import org.scalatest.Suite._
 import java.util.ConcurrentModificationException
 import java.util.concurrent.atomic.AtomicReference
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 import org.scalatest.Suite.checkChosenStyles
 import org.scalatest.events.LineInFile
 import org.scalatest.events.Location

@@ -32,7 +32,7 @@ import java.io.PrintStream
 import java.io.ByteArrayOutputStream
 import org.scalatest.DistributedSuiteSorter
 import scala.collection.mutable.ListBuffer
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 
 class TestSortingReporterSpec extends FunSpec with Matchers {
 

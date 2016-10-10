@@ -18,7 +18,7 @@ package org.scalatest.junit
 import _root_.junit.framework.AssertionFailedError
 import org.scalatest.exceptions.{PayloadField, ModifiablePayload, StackDepth, ModifiableMessage}
 import org.scalactic.Requirements._
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 import org.scalactic.source
 import org.scalatest.exceptions.StackDepthException
 import org.scalatest.exceptions.StackDepthExceptionHelper.getStackDepth

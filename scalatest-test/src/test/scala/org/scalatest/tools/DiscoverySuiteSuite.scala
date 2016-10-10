@@ -17,7 +17,7 @@ package org.scalatest.tools
 
 import org.scalatest.SharedHelpers.EventRecordingReporter
 import org.scalatest._
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 
 /*
 I can't get this to work and have no more time. Will make nestedSuiteNames package access.

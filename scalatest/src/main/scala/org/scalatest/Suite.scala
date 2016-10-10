@@ -28,7 +28,7 @@ import org.scalactic.Prettifier
 import org.scalatest.time.{Seconds, Span}
 import scala.collection.immutable.TreeSet
 import scala.util.control.NonFatal
-import StackDepthExceptionHelper.getStackDepthFun
+import exceptions.StackDepthExceptionHelper.getStackDepthFun
 import Suite.checkChosenStyles
 import Suite.formatterForSuiteAborted
 import Suite.formatterForSuiteCompleted

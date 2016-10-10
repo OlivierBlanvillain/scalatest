@@ -24,7 +24,7 @@ import org.scalatest.exceptions.TestCanceledException
 import OptionValues._
 import java.util.Date
 import org.scalactic.Prettifier
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 
 class AssertionsSpec extends FunSpec {
 

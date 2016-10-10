@@ -18,7 +18,7 @@ package org.scalactic
 import scala.util.Try
 import scala.util.Failure
 import annotation.tailrec
-import exceptions.ValidationFailedException
+import scalacticexceptions.ValidationFailedException
 
 /**
  * Trait providing an implicit class that adds a <code>toOr</code> method to
@@ -26,7 +26,7 @@ import exceptions.ValidationFailedException
  * and <code>Failure</code> to <code>Bad</code>, as well as a <code>validating</code> method,
  * which takes one or more validation functions and returns either the
  * same <code>Try</code> if either the <code>Try</code> had already failed or its value
- * passes all the functions, or [[org.scalactic.exceptions.ValidationFailedException `ValidationFailedException`]] containing an error message
+ * passes all the functions, or [[org.scalactic.scalacticexceptions.ValidationFailedException `ValidationFailedException`]] containing an error message
  * describing the first validation that failed.
  *
  * <p>
@@ -81,7 +81,7 @@ import exceptions.ValidationFailedException
  * try42: scala.util.Try[Int] = Success(42)
  *
  * scala&gt; val round42 = try42.validating(isRound)
- * round42: scala.util.Try[Int] = Failure(org.scalactic.exceptions.ValidationFailedException: 42 was not a round number)
+ * round42: scala.util.Try[Int] = Failure(org.scalactic.scalacticexceptions.ValidationFailedException: 42 was not a round number)
  * </pre>
  *
  * <p>
@@ -115,7 +115,7 @@ import exceptions.ValidationFailedException
  * isAnswerToLifeTheUniverseAndEverything: (i: Int)org.scalactic.Validation[org.scalactic.ErrorMessage]
  *
  * scala&gt; try100.validating(isRound, isDivBy3, isAnswerToLifeTheUniverseAndEverything)
- * res0: scala.util.Try[Int] = Failure(org.scalactic.exceptions.ValidationFailedException: 100 was not divisible by 3)
+ * res0: scala.util.Try[Int] = Failure(org.scalactic.scalacticexceptions.ValidationFailedException: 100 was not divisible by 3)
  * </pre>
  *
  * <p>

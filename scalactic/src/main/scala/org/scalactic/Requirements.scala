@@ -15,7 +15,7 @@
  */
 package org.scalactic
 
-import exceptions.NullArgumentException
+import scalacticexceptions.NullArgumentException
 // import reflect.macros.Context
 
 /**
@@ -110,7 +110,7 @@ import exceptions.NullArgumentException
  * f: java.util.Date = null
  *
  * scala&gt; requireNonNull(a, b, c, d, e, f)
- * org.scalactic.exceptions.NullArgumentException: <strong>e and f were null</strong>
+ * org.scalactic.scalacticexceptions.NullArgumentException: <strong>e and f were null</strong>
  * 	at org.scalactic.Requirements$RequirementsHelper.macroRequireNonNull(Requirements.scala:101)
  * 	...
  * </pre>

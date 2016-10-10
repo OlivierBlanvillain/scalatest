@@ -19,7 +19,7 @@ import java.io.File
 import java.net.URL
 import java.util.regex.Pattern
 import org.scalactic.Requirements._
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 
 import org.scalatest.{ConfigMap, Resources}
 

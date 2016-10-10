@@ -15,7 +15,7 @@
  */
 package org.scalatest
 
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 import scala.collection.immutable.TreeSet
 // SKIP-SCALATESTJS-START
 import org.scalatest.refspec.RefSpec

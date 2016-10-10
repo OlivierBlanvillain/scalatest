@@ -19,7 +19,7 @@ import prop.TableDrivenPropertyChecks
 import SharedHelpers._
 import TableDrivenPropertyChecks._
 import Matchers._
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 
 class ArgsSpec extends WordSpec with SeveredStackTraces {
   "The Args constructor" should {

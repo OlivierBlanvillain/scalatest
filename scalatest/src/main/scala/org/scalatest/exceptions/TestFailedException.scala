@@ -15,7 +15,7 @@
  */
 package org.scalatest.exceptions
 
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 import StackDepthExceptionHelper.posOrElseStackDepthFun
 import org.scalactic.Requirements._
 import org.scalactic.source
