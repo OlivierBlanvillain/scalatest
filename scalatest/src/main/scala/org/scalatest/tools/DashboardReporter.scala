@@ -139,14 +139,14 @@ private[scalatest] class DashboardReporter(directory: String,
   // xml containing all empty elements.
   //
   def getOldSummaryXml: Elem = {
-    if (summaryFile.exists)
+    // if (summaryFile.exists)
       XML.loadFile(summaryFile)
-    else
-      <summary>
-        <runs/>
-        <regressions/>
-        <recentlySlower/>
-      </summary>
+    // else
+    //   <summary>
+    //     <runs/>
+    //     <regressions/>
+    //     <recentlySlower/>
+    //   </summary>
   }
 
   //
