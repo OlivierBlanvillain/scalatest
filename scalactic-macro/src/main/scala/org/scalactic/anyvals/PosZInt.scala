@@ -129,7 +129,7 @@ import scala.collection.immutable.Range
  *
  * @param value The <code>Int</code> value underlying this <code>PosZInt</code>.
  */
-final class PosZInt private (val value: Int) extends AnyVal {
+final class PosZInt private[anyvals] (val value: Int) extends AnyVal {
 
   /**
    * A string representation of this <code>PosZInt</code>.

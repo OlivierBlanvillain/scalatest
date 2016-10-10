@@ -78,9 +78,10 @@ object ScalatestBuild extends Build {
     }
 
   def sharedSettings: Seq[Setting[_]] = Seq(
+    scalacOptions ++= Seq("-language:Scala2"),
     javaHome := getJavaHome,
-    scalaVersion := buildScalaVersion,
-    crossScalaVersions := Seq(buildScalaVersion, "2.10.6", "2.12.0-M4"),
+    // scalaVersion := buildScalaVersion,
+    // crossScalaVersions := Seq(buildScalaVersion, "2.10.6", "2.12.0-M4"),
     version := releaseVersion,
     scalacOptions ++= Seq("-feature", "-target:jvm-1.6"),
     resolvers += "Sonatype Public" at "https://oss.sonatype.org/content/groups/public",
@@ -161,7 +162,7 @@ object ScalatestBuild extends Build {
 
   def scalaLibraries(theScalaVersion: String) =
     Seq(
-      "org.scala-lang" % "scala-compiler" % theScalaVersion % "provided"
+      // "org.scala-lang" % "scala-compiler" % theScalaVersion % "provided"
       // "org.scala-lang" % "scala-reflect" % theScalaVersion // this is needed to compile macro
     )
 
@@ -246,14 +247,14 @@ object ScalatestBuild extends Build {
   //     "-oDIF"))
 
   lazy val commonTest = Project("common-test", file("common-test"))
-    .settings(sharedSettings: _*)
+    .settings(sharedSettings: _*).enablePlugins(com.felixmulder.dotty.plugin.DottyPlugin)
     .settings(
       projectTitle := "Common test classes used by scalactic and scalatest",
       libraryDependencies += scalacheckDependency("optional")
     ).dependsOn(scalacticMacro, LocalProject("scalatest"))
 
   // lazy val commonTestJS = Project("commonTestJS", file("common-test.js"))
-  //   .settings(sharedSettings: _*)
+  //   .settings(sharedSettings: _*).enablePlugins(com.felixmulder.dotty.plugin.DottyPlugin)
   //   .settings(
   //     projectTitle := "Common test classes used by scalactic.js and scalatest.js",
   //     libraryDependencies += scalacheckDependency("optional"),
@@ -265,7 +266,7 @@ object ScalatestBuild extends Build {
   //   ).dependsOn(scalacticMacroJS, LocalProject("scalatestJS")).enablePlugins(ScalaJSPlugin)
 
   lazy val scalacticMacro = Project("scalacticMacro", file("scalactic-macro"))
-    .settings(sharedSettings: _*)
+    .settings(sharedSettings: _*).enablePlugins(com.felixmulder.dotty.plugin.DottyPlugin)
     .settings(
       projectTitle := "Scalactic Macro",
       organization := "org.scalactic",
@@ -280,7 +281,7 @@ object ScalatestBuild extends Build {
     )
 
   // lazy val scalacticMacroJS = Project("scalacticMacroJS", file("scalactic-macro.js"))
-  //   .settings(sharedSettings: _*)
+  //   .settings(sharedSettings: _*).enablePlugins(com.felixmulder.dotty.plugin.DottyPlugin)
   //   .settings(
   //     projectTitle := "Scalactic Macro.js",
   //     organization := "org.scalactic",
@@ -296,7 +297,7 @@ object ScalatestBuild extends Build {
   //   ).enablePlugins(ScalaJSPlugin)
 
   lazy val scalactic = Project("scalactic", file("scalactic"))
-    .settings(sharedSettings: _*)
+    .settings(sharedSettings: _*).enablePlugins(com.felixmulder.dotty.plugin.DottyPlugin)
     .settings(scalacticDocSettings: _*)
     .settings(
       projectTitle := "Scalactic",
@@ -313,7 +314,8 @@ object ScalatestBuild extends Build {
       // include the macro sources in the main source jar
       mappings in (Compile, packageSrc) ++= mappings.in(scalacticMacro, Compile, packageSrc).value,
       scalacticDocSourcesSetting,
-      docTaskSetting
+      docTaskSetting,
+      scalacOptions ++= Seq("-language:Scala2")
     )/*.settings(osgiSettings: _*)*/.settings(
       // OsgiKeys.exportPackage := Seq(
       //   "org.scalactic",
@@ -338,7 +340,7 @@ object ScalatestBuild extends Build {
     ).dependsOn(scalacticMacro % "compile-internal, test-internal").aggregate(LocalProject("scalactic-test"))  // avoid dependency in pom on non-existent scalactic-macro artifact, per discussion in http://grokbase.com/t/gg/simple-build-tool/133shekp07/sbt-avoid-dependence-in-a-macro-based-project
 
   // lazy val scalacticJS = Project("scalacticJS", file("scalactic.js"))
-  //   .settings(sharedSettings: _*)
+  //   .settings(sharedSettings: _*).enablePlugins(com.felixmulder.dotty.plugin.DottyPlugin)
   //   .settings(
   //     projectTitle := "Scalactic.js",
   //     organization := "org.scalactic",
@@ -378,7 +380,7 @@ object ScalatestBuild extends Build {
   //   ).dependsOn(scalacticMacroJS % "compile-internal, test-internal").aggregate(LocalProject("scalacticTestJS")).enablePlugins(ScalaJSPlugin)
 
   lazy val scalacticTest = Project("scalactic-test", file("scalactic-test"))
-    .settings(sharedSettings: _*)
+    .settings(sharedSettings: _*).enablePlugins(com.felixmulder.dotty.plugin.DottyPlugin)
     .settings(
       projectTitle := "Scalactic Test",
       organization := "org.scalactic",
@@ -389,7 +391,7 @@ object ScalatestBuild extends Build {
     ).dependsOn(scalactic, scalatest % "test", commonTest % "test")
 
   // lazy val scalacticTestJS = Project("scalacticTestJS", file("scalactic-test.js"))
-  //   .settings(sharedSettings: _*)
+  //   .settings(sharedSettings: _*).enablePlugins(com.felixmulder.dotty.plugin.DottyPlugin)
   //   .settings(
   //     projectTitle := "Scalactic Test.js",
   //     organization := "org.scalactic",
@@ -412,7 +414,7 @@ object ScalatestBuild extends Build {
   //   ).dependsOn(scalacticJS, scalatestJS % "test", commonTestJS % "test").enablePlugins(ScalaJSPlugin)
 
   lazy val scalatest = Project("scalatest", file("scalatest"))
-   .settings(sharedSettings: _*)
+   .settings(sharedSettings: _*).enablePlugins(com.felixmulder.dotty.plugin.DottyPlugin)
    .settings(scalatestDocSettings: _*)
    .settings(
      projectTitle := "ScalaTest",
@@ -500,7 +502,7 @@ object ScalatestBuild extends Build {
    ).dependsOn(scalacticMacro % "compile-internal, test-internal", scalactic).aggregate(LocalProject("scalatest-test"))
 
   lazy val scalatestTest = Project("scalatest-test", file("scalatest-test"))
-    .settings(sharedSettings: _*)
+    .settings(sharedSettings: _*).enablePlugins(com.felixmulder.dotty.plugin.DottyPlugin)
     .settings(
       projectTitle := "ScalaTest Test",
       organization := "org.scalatest",
@@ -517,7 +519,7 @@ object ScalatestBuild extends Build {
     ).dependsOn(scalatest % "test", commonTest % "test")
 
   // lazy val scalatestJS = Project("scalatestJS", file("scalatest.js"))
-  //   .settings(sharedSettings: _*)
+  //   .settings(sharedSettings: _*).enablePlugins(com.felixmulder.dotty.plugin.DottyPlugin)
   //   .settings(
   //     projectTitle := "ScalaTest",
   //     organization := "org.scalatest",
@@ -605,7 +607,7 @@ object ScalatestBuild extends Build {
   //   ).dependsOn(scalacticMacroJS % "compile-internal, test-internal", scalacticJS).aggregate(LocalProject("scalatestTestJS")).enablePlugins(ScalaJSPlugin)
 
   // lazy val scalatestTestJS = Project("scalatestTestJS", file("scalatest-test.js"))
-  //   .settings(sharedSettings: _*)
+  //   .settings(sharedSettings: _*).enablePlugins(com.felixmulder.dotty.plugin.DottyPlugin)
   //   .settings(
   //     projectTitle := "ScalaTest Test",
   //     organization := "org.scalatest",
@@ -633,7 +635,7 @@ object ScalatestBuild extends Build {
   //   ).dependsOn(scalatestJS % "test", commonTestJS % "test").enablePlugins(ScalaJSPlugin)
 
   lazy val scalatestApp = Project("scalatestApp", file("."))
-    .settings(sharedSettings: _*)
+    .settings(sharedSettings: _*).enablePlugins(com.felixmulder.dotty.plugin.DottyPlugin)
     .settings(
       projectTitle := "ScalaTest App",
       name := "scalatest-app",
@@ -705,7 +707,7 @@ object ScalatestBuild extends Build {
     ).dependsOn(scalacticMacro % "compile-internal, test-internal", scalactic % "compile-internal", scalatest % "compile-internal").aggregate(scalactic, scalatest)
 
   // lazy val scalatestAppJS = Project("scalatestAppJS", file("scalatest-app.js"))
-  //   .settings(sharedSettings: _*)
+  //   .settings(sharedSettings: _*).enablePlugins(com.felixmulder.dotty.plugin.DottyPlugin)
   //   .settings(
   //     projectTitle := "ScalaTest App",
   //     name := "scalatest-app",

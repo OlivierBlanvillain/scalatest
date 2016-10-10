@@ -35,7 +35,7 @@ trait DeprecatedPrettyMethods {
    *
    * <p>
    * This class exists so that instances of <code>PrettifierConfig</code> can be made implicit instead
-   * of <code>Prettifer</code>. Because <code>Prettifier</code> is a <code>Any =&gt; String</code>, 
+   * of <code>Prettifer</code>. Because <code>Prettifier</code> is a <code>Any =&gt; String</code>,
    * making it implicit could result in unintentional applications.
    * </p>
    *
@@ -52,7 +52,7 @@ trait DeprecatedPrettyMethods {
    * use a different <code>Prettifier</code>.
    * </p>
    */
-  implicit val prettifierConfig = PrettifierConfig(Prettifier.default)
+  implicit val prettifierConfig: PrettifierConfig = PrettifierConfig(Prettifier.default)
 
   /**
    * Implicit class that adds a <code>pretty</code> method to any object.

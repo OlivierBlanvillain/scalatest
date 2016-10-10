@@ -347,8 +347,8 @@ final class PosFloat private (val value: Float) extends AnyVal {
 
   def round: PosZInt = {
     import scala.util.Failure
-import scala.util.Success
-import scala.util.Try
+    import scala.util.Success
+    import scala.util.Try
     val roundedInt: Int = math.round(value)
     val result = Try(PosZInt.from(math.round(value)).get)
     result match {
