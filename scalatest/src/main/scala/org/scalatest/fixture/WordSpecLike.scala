@@ -562,7 +562,7 @@ trait WordSpecLike extends TestSuite with TestRegistration with ShouldVerb with 
       val stackDepth = 4
       // SKIP-SCALATESTJS-END
       //SCALATESTJS-ONLY val stackDepth = 6
-      registerBranch(string, Some("when"), "when", "when", stackDepth, -2, pos, f _)
+      registerBranch(string, Some("when"), "when", "when", stackDepth, -2, pos, () => f)
     }
 
     /**
@@ -612,7 +612,7 @@ trait WordSpecLike extends TestSuite with TestRegistration with ShouldVerb with 
       val stackDepth = 4
       // SKIP-SCALATESTJS-END
       //SCALATESTJS-ONLY val stackDepth = 6
-      registerBranch(string.trim + " that", None, "that", "that", stackDepth, -2, pos, f _)
+      registerBranch(string.trim + " that", None, "that", "that", stackDepth, -2, pos, () => f)
     }
 
     /**
@@ -638,7 +638,7 @@ trait WordSpecLike extends TestSuite with TestRegistration with ShouldVerb with 
       val stackDepth = 4
       // SKIP-SCALATESTJS-END
       //SCALATESTJS-ONLY val stackDepth = 6
-      registerBranch(string.trim + " which", None, "which", "which", stackDepth, -2, pos, f _)
+      registerBranch(string.trim + " which", None, "which", "which", stackDepth, -2, pos, () => f)
     }
 
     /**
