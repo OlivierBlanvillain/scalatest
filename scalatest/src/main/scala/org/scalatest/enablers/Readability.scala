@@ -30,7 +30,7 @@ import scala.collection.GenTraversable
  * can be any type for which the concept of being readable makes sense, such as <code>java.io.File</code>.
  * You can enable the <code>be readable</code> matcher syntax on your own type <code>U</code> by defining a
  * <code>Readability[U]</code> for the type and making it available implicitly.
- * 
+ *
  * <p>
  * ScalaTest provides an implicit <code>Readability</code> instance for <code>java.io.File</code> and arbitary
  * object with <code>isReadable()</code> or <code>isReadable</code> in the <code>Readability</code> companion object.
@@ -70,28 +70,28 @@ object Readability {
       def isReadable(file: FILE): Boolean = file.canRead
     }
 
-  import scala.language.reflectiveCalls
+  // import scala.language.reflectiveCalls
 
-  /**
-   * Enable <code>Readability</code> implementation for any arbitrary object with a <code>isReadable()</code> method that returns <code>Boolean</code>
-   *
-   * @tparam T any type that has a <code>isReadable()</code> method that returns <code>Boolean</code>
-   * @return <code>Readability[T]</code> that supports <code>T</code> in <code>be readable</code> syntax
-   */
-  implicit def readabilityOfAnyRefWithIsReadableMethod[T <: AnyRef { def isReadable(): Boolean}]: Readability[T] = 
-    new Readability[T] {
-      def isReadable(obj: T): Boolean = obj.isReadable
-    }
+  // /**
+  //  * Enable <code>Readability</code> implementation for any arbitrary object with a <code>isReadable()</code> method that returns <code>Boolean</code>
+  //  *
+  //  * @tparam T any type that has a <code>isReadable()</code> method that returns <code>Boolean</code>
+  //  * @return <code>Readability[T]</code> that supports <code>T</code> in <code>be readable</code> syntax
+  //  */
+  // implicit def readabilityOfAnyRefWithIsReadableMethod[T <: AnyRef { def isReadable(): Boolean}]: Readability[T] =
+  //   new Readability[T] {
+  //     def isReadable(obj: T): Boolean = obj.isReadable
+  //   }
 
-  /**
-   * Enable <code>Readability</code> implementation for any arbitrary object with a parameterless <code>isReadable</code> method that returns <code>Boolean</code>
-   *
-   * @tparam T any type that has a parameterless <code>isReadable</code> method that returns <code>Boolean</code>
-   * @return <code>Readability[T]</code> that supports <code>T</code> in <code>be readable</code> syntax
-   */
-  implicit def readabilityOfAnyRefWithParameterlessIsReadableMethod[T <: AnyRef { def isReadable: Boolean}]: Readability[T] = 
-    new Readability[T] {
-      def isReadable(obj: T): Boolean = obj.isReadable
-    }
+  // /**
+  //  * Enable <code>Readability</code> implementation for any arbitrary object with a parameterless <code>isReadable</code> method that returns <code>Boolean</code>
+  //  *
+  //  * @tparam T any type that has a parameterless <code>isReadable</code> method that returns <code>Boolean</code>
+  //  * @return <code>Readability[T]</code> that supports <code>T</code> in <code>be readable</code> syntax
+  //  */
+  // implicit def readabilityOfAnyRefWithParameterlessIsReadableMethod[T <: AnyRef { def isReadable: Boolean}]: Readability[T] =
+  //   new Readability[T] {
+  //     def isReadable(obj: T): Boolean = obj.isReadable
+  //   }
 }
 
