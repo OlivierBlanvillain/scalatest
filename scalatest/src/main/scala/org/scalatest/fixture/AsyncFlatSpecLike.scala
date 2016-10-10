@@ -1983,7 +1983,7 @@ import resultOfStringPassedToVerb.verb
    * initialized with the verb and rest parameters (the second and third parameters to
    * the function, respectively).
    * </p>
-   */ 
+   */
   protected implicit val shorthandTestRegistrationFunction: StringVerbStringInvocation =
     new StringVerbStringInvocation {
       def apply(subject: String, verb: String, rest: String, pos: source.Position): ResultOfStringPassedToVerb = {
@@ -1998,7 +1998,7 @@ import resultOfStringPassedToVerb.verb
               // "A Stack" must "test this" taggedAs(mytags.SlowAsMolasses) is (pending)
               //                                                            ^
               def is(testFun: => PendingStatement): Unit = {
-                registerPendingTestToRun(verb.trim + " " + rest.trim, tags, "is", new NoArgTestWrapper(testFun _), pos)
+                registerPendingTestToRun(verb.trim + " " + rest.trim, tags, "is", new NoArgTestWrapper(() => testFun), pos)
               }
             }
           }
