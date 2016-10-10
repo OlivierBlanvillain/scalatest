@@ -63,19 +63,19 @@ private[scalatest] class HtmlReporter(
   private val imagesDir = new File(targetDir, "images")
   private val jsDir = new File(targetDir, "js")
   private val cssDir = new File(targetDir, "css")
-  
+
   if (!targetDir.exists)
     targetDir.mkdirs()
-    
+
   if (!imagesDir.exists)
     imagesDir.mkdirs()
-    
+
   if (!jsDir.exists)
     jsDir.mkdirs()
-    
+
   if (!cssDir.exists)
     cssDir.mkdirs()
-    
+
   private def copyResource(url: URL, toDir: File, targetFileName: String): Unit = {
     val inputStream = url.openStream
     try {
@@ -92,10 +92,10 @@ private[scalatest] class HtmlReporter(
       inputStream.close()
     }
   }
-  
-  private def getResource(resourceName: String): URL = 
+
+  private def getResource(resourceName: String): URL =
     classOf[Suite].getClassLoader.getResource(resourceName)
-  
+
   cssUrl match {
     case Some(cssUrl) => copyResource(cssUrl, cssDir, "custom.css")
     case None => // Do nothing.
@@ -103,14 +103,14 @@ private[scalatest] class HtmlReporter(
   copyResource(getResource("org/scalatest/HtmlReporter.css"), cssDir, "styles.css")
   copyResource(getResource("org/scalatest/sorttable.js"), jsDir, "sorttable.js")
   copyResource(getResource("org/scalatest/d3.v2.min.js"), jsDir, "d3.v2.min.js")
-  
+
   copyResource(getResource("images/greenbullet.gif"), imagesDir, "testsucceeded.gif")
   copyResource(getResource("images/redbullet.gif"), imagesDir, "testfailed.gif")
   copyResource(getResource("images/yellowbullet.gif"), imagesDir, "testignored.gif")
   copyResource(getResource("images/yellowbullet.gif"), imagesDir, "testcanceled.gif")
   copyResource(getResource("images/yellowbullet.gif"), imagesDir, "testpending.gif")
   copyResource(getResource("images/graybullet.gif"), imagesDir, "infoprovided.gif")
-  
+
   private val results = resultHolder match {
     case Some(holder) => holder
     case None => new SuiteResultHolder()
@@ -128,7 +128,7 @@ private[scalatest] class HtmlReporter(
       case _ => stringToPrint
     }
   }
-  
+
   private def stringsToPrintOnError(noteMessageFun: => String, errorMessageFun: Any => String, message: String, throwable: Option[Throwable],
     formatter: Option[Formatter], suiteName: Option[String], testName: Option[String], duration: Option[Long]): String = {
 
@@ -183,30 +183,30 @@ private[scalatest] class HtmlReporter(
 
     }
   }
-  
-  private def getIndentLevel(formatter: Option[Formatter]) = 
+
+  private def getIndentLevel(formatter: Option[Formatter]) =
     formatter match {
       case Some(IndentedText(formattedText, rawText, indentationLevel)) => indentationLevel
       case _ => 0
   }
-  
-  private def getSuiteFileName(suiteResult: SuiteResult) = 
+
+  private def getSuiteFileName(suiteResult: SuiteResult) =
     suiteResult.suiteClassName match {
       case Some(suiteClassName) => suiteClassName
       case None => suiteResult.suiteName
     }
-  
+
   private def makeSuiteFile(suiteResult: SuiteResult): Unit = {
     val name = getSuiteFileName(suiteResult)
 
     val pw = new PrintWriter(new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(new File(targetDir, name + ".html")), BufferSize), "UTF-8"))
     try {
       pw.println {
-        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "\n" + 
-        "<!DOCTYPE html" + "\n" + 
-        "  PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"" + "\n" + 
-        "  \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" + "\n" + 
-        getSuiteHtml(name, suiteResult) 
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "\n" +
+        "<!DOCTYPE html" + "\n" +
+        "  PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"" + "\n" +
+        "  \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">" + "\n" +
+        getSuiteHtml(name, suiteResult)
       }
     }
     finally {
@@ -214,19 +214,19 @@ private[scalatest] class HtmlReporter(
       pw.close()
     }
   }
-  
-  private def appendCombinedStatus(name: String, r: SuiteResult) = 
+
+  private def appendCombinedStatus(name: String, r: SuiteResult) =
     if (r.testsFailedCount > 0)
       name + "_with_failed"
     else if (r.testsIgnoredCount > 0 || r.testsPendingCount > 0 || r.testsCanceledCount > 0)
       name + "_passed"
     else
       name + "_passed_all"
-  
+
   private def transformStringForResult(s: String, suiteResult: SuiteResult): String =
     s + (if (suiteResult.testsFailedCount > 0) "_failed" else "_passed")
 
-  private def getSuiteHtml(name: String, suiteResult: SuiteResult) = 
+  private def getSuiteHtml(name: String, suiteResult: SuiteResult) =
     new scala.xml.Atom("PLACEHOLDER")
     // <html>
       // <head>
@@ -417,32 +417,32 @@ private[scalatest] class HtmlReporter(
             case None => (None, None)
           }
         val infoContent = stringsToPrintOnError(Resources.infoProvidedNote, Resources.infoProvided _, message, throwable, formatter, suiteName, testName, None)
-            
+
         val elementId = generateElementId
         test(elementId, List(infoContent), getIndentLevel(formatter) + 1, theClass)
-        
-      case MarkupProvided(ordinal, text, nameInfo, formatter, location, payload, threadName, timeStamp) => 
+
+      case MarkupProvided(ordinal, text, nameInfo, formatter, location, payload, threadName, timeStamp) =>
         val (suiteName, testName) =
           nameInfo match {
             case Some(NameInfo(suiteName, _, _, testName)) => (Some(suiteName), testName)
             case None => (None, None)
           }
-        
+
         val elementId = generateElementId
         markup(elementId, text, getIndentLevel(formatter) + 1, theClass)
-        
+
       case _ => NodeSeq.Empty
     }
   }
-  
+
   private def makeIndexFile(completeMessageFun: => String, completeInMessageFun: String => String, duration: Option[Long]): Unit = {
     val pw = new PrintWriter(new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(new File(targetDir, "index.html")), BufferSize), "UTF-8"))
     try {
       pw.println {
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-        "<!DOCTYPE html\n" + 
+        "<!DOCTYPE html\n" +
         "PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n" +
-        "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n" + 
+        "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n" +
         getIndexHtml(completeMessageFun, completeInMessageFun, duration)
       }
     }
@@ -451,56 +451,56 @@ private[scalatest] class HtmlReporter(
       pw.close()
     }
   }
-  
-  private def getHeaderStatusColor(summary: Summary) = 
+
+  private def getHeaderStatusColor(summary: Summary) =
     if (summary.testsFailedCount == 0) "scalatest-header-passed" else "scalatest-header-failed"
-  
+
   private def getPieChartScript(summary: Summary) = {
     import summary._
-    
-    "/* modified from http://www.permadi.com/tutorial/cssGettingBackgroundColor/index.html - */" + "\n" + 
-    "function getBgColor(elementId)" +  "\n" + 
-    "{" + "\n" + 
-    "  var element = document.getElementById(elementId);" + "\n" + 
-    "  if (element.currentStyle)" + "\n" + 
-    "    return element.currentStyle.backgroundColor;" + "\n" + 
-    "  if (window.getComputedStyle)" + "\n" + 
-    "  {" + "\n" + 
-    "    var elementStyle=window.getComputedStyle(element,\"\");" + "\n" + 
-    "    if (elementStyle)" + "\n" + 
-    "      return elementStyle.getPropertyValue(\"background-color\");" + "\n" + 
-    "  }" + "\n" + 
-    "  // Return 0 if both methods failed." + "\n" + 
-    "  return 0;" + "\n" + 
-    "}" + "\n" + 
-    "var data = [" + testsSucceededCount + ", " + testsFailedCount + ", " + testsIgnoredCount + ", " + testsPendingCount + ", " + testsCanceledCount + "];" + "\n" +  
-    "var color = [getBgColor('summary_view_row_1_legend_succeeded_label'), " + "\n" + 
-    "             getBgColor('summary_view_row_1_legend_failed_label'), " + "\n" + 
-    "             getBgColor('summary_view_row_1_legend_ignored_label'), " + "\n" + 
-    "             getBgColor('summary_view_row_1_legend_pending_label'), " + "\n" + 
-    "             getBgColor('summary_view_row_1_legend_canceled_label')" +  "\n" + 
-    "            ];" + "\n" + 
-    "var width = document.getElementById('chart_div').offsetWidth," + "\n" + 
-    "    height = document.getElementById('chart_div').offsetHeight," + "\n" + 
-    "    outerRadius = Math.min(width, height) / 2," + "\n" + 
-    "    innerRadius = 0," + "\n" + 
-    "    donut = d3.layout.pie()," + "\n" +  
-    "    arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius);" + "\n" +  
-    "var vis = d3.select(\"#chart_div\")" + "\n" + 
-    "            .append(\"svg\")" + "\n" + 
-    "            .data([data])" + "\n" + 
-    "            .attr(\"width\", width)" + "\n" + 
-    "            .attr(\"height\", height);" + "\n" + 
-    "var arcs = vis.selectAll(\"g.arc\")" + "\n" + 
-    "              .data(donut)" + "\n" + 
-    "              .enter().append(\"g\")" + "\n" + 
-    "              .attr(\"class\", \"arc\")" + "\n" + 
-    "              .attr(\"transform\", \"translate(\" + outerRadius + \",\" + outerRadius + \")\");" + "\n" + 
-    "arcs.append(\"path\")" + "\n" + 
-    "    .attr(\"fill\", function(d, i) { return color[i]; })" + "\n" +  
+
+    "/* modified from http://www.permadi.com/tutorial/cssGettingBackgroundColor/index.html - */" + "\n" +
+    "function getBgColor(elementId)" +  "\n" +
+    "{" + "\n" +
+    "  var element = document.getElementById(elementId);" + "\n" +
+    "  if (element.currentStyle)" + "\n" +
+    "    return element.currentStyle.backgroundColor;" + "\n" +
+    "  if (window.getComputedStyle)" + "\n" +
+    "  {" + "\n" +
+    "    var elementStyle=window.getComputedStyle(element,\"\");" + "\n" +
+    "    if (elementStyle)" + "\n" +
+    "      return elementStyle.getPropertyValue(\"background-color\");" + "\n" +
+    "  }" + "\n" +
+    "  // Return 0 if both methods failed." + "\n" +
+    "  return 0;" + "\n" +
+    "}" + "\n" +
+    "var data = [" + testsSucceededCount + ", " + testsFailedCount + ", " + testsIgnoredCount + ", " + testsPendingCount + ", " + testsCanceledCount + "];" + "\n" +
+    "var color = [getBgColor('summary_view_row_1_legend_succeeded_label'), " + "\n" +
+    "             getBgColor('summary_view_row_1_legend_failed_label'), " + "\n" +
+    "             getBgColor('summary_view_row_1_legend_ignored_label'), " + "\n" +
+    "             getBgColor('summary_view_row_1_legend_pending_label'), " + "\n" +
+    "             getBgColor('summary_view_row_1_legend_canceled_label')" +  "\n" +
+    "            ];" + "\n" +
+    "var width = document.getElementById('chart_div').offsetWidth," + "\n" +
+    "    height = document.getElementById('chart_div').offsetHeight," + "\n" +
+    "    outerRadius = Math.min(width, height) / 2," + "\n" +
+    "    innerRadius = 0," + "\n" +
+    "    donut = d3.layout.pie()," + "\n" +
+    "    arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius);" + "\n" +
+    "var vis = d3.select(\"#chart_div\")" + "\n" +
+    "            .append(\"svg\")" + "\n" +
+    "            .data([data])" + "\n" +
+    "            .attr(\"width\", width)" + "\n" +
+    "            .attr(\"height\", height);" + "\n" +
+    "var arcs = vis.selectAll(\"g.arc\")" + "\n" +
+    "              .data(donut)" + "\n" +
+    "              .enter().append(\"g\")" + "\n" +
+    "              .attr(\"class\", \"arc\")" + "\n" +
+    "              .attr(\"transform\", \"translate(\" + outerRadius + \",\" + outerRadius + \")\");" + "\n" +
+    "arcs.append(\"path\")" + "\n" +
+    "    .attr(\"fill\", function(d, i) { return color[i]; })" + "\n" +
     "    .attr(\"d\", arc);\n"
   }
-  
+
   private def getIndexHtml(completeMessageFun: => String, completeInMessageFun: String => String, duration: Option[Long]) = {
     val summary = results.summary
     import summary._
@@ -628,10 +628,10 @@ private[scalatest] class HtmlReporter(
         // </script>
       // </body>
     // </html>
-  }      
-          
+  }
+
   // TODO: This needs to be internationalized
-  private def getStatistic(summary: Summary) = 
+  private def getStatistic(summary: Summary) =
     new scala.xml.Atom("PLACEHOLDER")
     // <div id="display-filters">
       // <input id="succeeded_checkbox" name="succeeded_checkbox" type="checkbox" checked="checked" onchange="applyFilter()" /> <label id="succeeded_checkbox_label" for="passed_checkbox">Succeeded</label>
@@ -640,7 +640,7 @@ private[scalatest] class HtmlReporter(
       // <input id="ignored_checkbox" name="ignored_checkbox" type="checkbox" checked="checked" onchange="applyFilter()" /> <label id="ignored_checkbox_label" for="ignored_checkbox">Ignored</label>
       // <input id="pending_checkbox" name="pending_checkbox" type="checkbox" checked="checked" onchange="applyFilter()" /> <label id="pending_checkbox_label" for="pending_checkbox">Pending</label>
     // </div>
-  
+
   private def header(completeMessageFun: => String, completeInMessageFun: String => String, duration: Option[Long], summary: Summary) =
     new scala.xml.Atom("PLACEHOLDER")
     // <div id="scalatest-header" class={ getHeaderStatusColor(summary) }>
@@ -655,19 +655,19 @@ private[scalatest] class HtmlReporter(
         // <p id="testSummary">{ getTestSummary(summary) }</p>
       // </div>
     // </div>
-        
+
   private def generateElementId = UUID.randomUUID.toString
-  
+
   private def setBit(stack: collection.mutable.Stack[String], tagMap: collection.mutable.HashMap[String, Int], bit: Int): Unit = {
-    stack.foreach { scopeElementId => 
+    stack.foreach { scopeElementId =>
       val currentBits = tagMap(scopeElementId)
       tagMap.put(scopeElementId, currentBits | bit)
     }
   }
-  
+
   val tagMap = collection.mutable.HashMap[String, Int]()
-        
-  private def suiteResults = 
+
+  private def suiteResults =
     new scala.xml.Atom("PLACEHOLDER")
     // <table class="sortable">
       // <tr>
@@ -722,19 +722,19 @@ private[scalatest] class HtmlReporter(
     //   }
     // }
     // </table>
-      
-  private def countStyle(prefix: String, count: Int) = 
+
+  private def countStyle(prefix: String, count: Int) =
     if (count == 0)
       prefix + "_zero"
     else
       prefix
-      
-  private def durationDisplay(duration: Option[Long]) = 
+
+  private def durationDisplay(duration: Option[Long]) =
     duration match {
       case Some(duration) => duration
       case None => "-"
     }
-    
+
   private def suiteSummary(elementId: String, suiteFileName: String, suiteResult: SuiteResult) = {
     import suiteResult._
     new scala.xml.Atom("PLACEHOLDER")
@@ -749,7 +749,7 @@ private[scalatest] class HtmlReporter(
       // <td class={ appendCombinedStatus("total", suiteResult) }>{ testsSucceededCount + testsFailedCount + testsIgnoredCount + testsPendingCount + testsCanceledCount }</td>
     // </tr>
   }
-        
+
   private def twoLess(indentLevel: Int): Int =
     indentLevel - 2 match {
       case lev if lev < 0 => 0
@@ -762,13 +762,13 @@ private[scalatest] class HtmlReporter(
       case lev => lev
     }
 
-  private def scope(elementId: String, message: String, indentLevel: Int) = 
+  private def scope(elementId: String, message: String, indentLevel: Int) =
     new scala.xml.Atom("PLACEHOLDER")
     // <div id={ elementId } class="scope" style={ "margin-left: " + (specIndent * oneLess(indentLevel)) + "px;" }>
       // { message }
     // </div>
-      
-  private def test(elementId: String, lines: List[String], indentLevel: Int, styleName: String) = 
+
+  private def test(elementId: String, lines: List[String], indentLevel: Int, styleName: String) =
     new scala.xml.Atom("PLACEHOLDER")
     // <div id={ elementId } class={ styleName } style={ "margin-left: " + (specIndent * twoLess(indentLevel)) + "px;" }>
       // <dl>
@@ -779,11 +779,11 @@ private[scalatest] class HtmlReporter(
         // }
       // </dl>
     // </div>
-  
+
   private def testWithDetails(elementId: String, lines: List[String], message: String, throwable: Option[Throwable], indentLevel: Int, styleName: String) = {
     def getHTMLForStackTrace(stackTraceList: List[StackTraceElement]) =
               stackTraceList.map((ste: StackTraceElement) => new scala.xml.Atom("PLACEHOLDER") /* <div>{ ste.toString }</div> */)
-    
+
     def displayErrorMessage(errorMessage: String) = {
       new scala.xml.Atom("PLACEHOLDER")
       // scala automatically change <br /> to <br></br>, which will cause 2 line breaks, use unparsedXml("<br />") to solve it.
@@ -793,7 +793,7 @@ private[scalatest] class HtmlReporter(
       // else
         // <span>{ message }</span>
     }
-              
+
     def getHTMLForCause(throwable: Throwable): NodeBuffer = {
       // val cause = throwable.getCause
       // if (cause != null) {
@@ -823,7 +823,7 @@ private[scalatest] class HtmlReporter(
       // else
       new scala.xml.NodeBuffer
     }
-    
+
     val (grayStackTraceElements, blackStackTraceElements) =
       throwable match {
         case Some(throwable) =>
@@ -832,17 +832,17 @@ private[scalatest] class HtmlReporter(
             case sde: exceptions.StackDepthException =>
               (stackTraceElements.take(sde.failedCodeStackDepth), stackTraceElements.drop(sde.failedCodeStackDepth))
             case _ => (List(), stackTraceElements)
-          } 
+          }
         case None => (List(), List())
       }
-    
-    val throwableTitle = 
+
+    val throwableTitle =
       throwable match {
         case Some(throwable) => Some(throwable.getClass.getName)
         case None => None
       }
-    
-    val fileAndLineOption: Option[String] = 
+
+    val fileAndLineOption: Option[String] =
       throwable match {
         case Some(throwable) =>
           throwable match {
@@ -852,7 +852,7 @@ private[scalatest] class HtmlReporter(
           }
         case None => None
       }
-    
+
     val linkId = UUID.randomUUID.toString
     val contentId = UUID.randomUUID.toString
     new scala.xml.Atom("PLACEHOLDER")
@@ -906,7 +906,7 @@ private[scalatest] class HtmlReporter(
     //   // </div>
     // // </div>
   }
-        
+
   // Chee Seng, I changed oneLess to twoLess here, because markup should indent the same as info.
   // I added the call to convertSingleParaToDefinition, so simple one-liner markup looks the same as an info.
   // TODO: probably actually show the exception in the HTML report rather than blowing up the reporter, because that means
@@ -927,33 +927,33 @@ private[scalatest] class HtmlReporter(
     // </div>
     new scala.xml.Atom("PLACEHOLDER")
   }
- 
-  private def tagMapScript = 
-    "tagMap = { \n" + 
-      tagMap.map { case (elementId, bitSet) => "\"" + elementId + "\": " + bitSet }.mkString(", \n") + 
-    "};\n" + 
+
+  private def tagMapScript =
+    "tagMap = { \n" +
+      tagMap.map { case (elementId, bitSet) => "\"" + elementId + "\": " + bitSet }.mkString(", \n") +
+    "};\n" +
     "applyFilter();"
-    
+
   private var eventList = new ListBuffer[Event]()
   private var runEndEvent: Option[Event] = None
-        
+
   def apply(event: Event): Unit = {
-        
+
     event match {
       case _: DiscoveryStarting  =>
       case _: DiscoveryCompleted =>
 
-      case RunStarting(ordinal, testCount, configMap, formatter, location, payload, threadName, timeStamp) => 
+      case RunStarting(ordinal, testCount, configMap, formatter, location, payload, threadName, timeStamp) =>
 
-      case RunCompleted(ordinal, duration, summary, formatter, location, payload, threadName, timeStamp) => 
+      case RunCompleted(ordinal, duration, summary, formatter, location, payload, threadName, timeStamp) =>
         runEndEvent = Some(event)
 
       case RunStopped(ordinal, duration, summary, formatter, location, payload, threadName, timeStamp) =>
         runEndEvent = Some(event)
 
-      case RunAborted(ordinal, message, throwable, duration, summary, formatter, location, payload, threadName, timeStamp) => 
+      case RunAborted(ordinal, message, throwable, duration, summary, formatter, location, payload, threadName, timeStamp) =>
         runEndEvent = Some(event)
-        
+
       case SuiteCompleted(ordinal, suiteName, suiteId, suiteClassName, duration, formatter, location, rerunner, payload, threadName, timeStamp) =>
         val (suiteEvents, otherEvents) = extractSuiteEvents(suiteId)
         eventList = otherEvents
@@ -961,8 +961,8 @@ private[scalatest] class HtmlReporter(
         if (sortedSuiteEvents.length == 0)
           throw new IllegalStateException("Expected SuiteStarting for completion event: " + event + " in the head of suite events, but we got no suite event at all")
         sortedSuiteEvents.head match {
-          case suiteStarting: SuiteStarting => 
-            val suiteResult = sortedSuiteEvents.foldLeft(SuiteResult(suiteId, suiteName, suiteClassName, duration, suiteStarting, event, Vector.empty ++ sortedSuiteEvents.tail, 0, 0, 0, 0, 0, 0, true)) { case (r, e) => 
+          case suiteStarting: SuiteStarting =>
+            val suiteResult = sortedSuiteEvents.foldLeft(SuiteResult(suiteId, suiteName, suiteClassName, duration, suiteStarting, event, Vector.empty ++ sortedSuiteEvents.tail, 0, 0, 0, 0, 0, 0, true)) { case (r, e) =>
               e match {
                 case testSucceeded: TestSucceeded => r.copy(testsSucceededCount = r.testsSucceededCount + 1)
                 case testFailed: TestFailed => r.copy(testsFailedCount = r.testsFailedCount + 1)
@@ -980,10 +980,10 @@ private[scalatest] class HtmlReporter(
               results += suiteResult
               makeSuiteFile(suiteResult)
             }
-          case other => 
+          case other =>
             throw new IllegalStateException("Expected SuiteStarting for completion event: " + event +  " in the head of suite events, but we got: " + other)
         }
-            
+
       case SuiteAborted(ordinal, message, suiteName, suiteId, suiteClassName, throwable, duration, formatter, location, rerunner, payload, threadName, timeStamp) =>
         val (suiteEvents, otherEvents) = extractSuiteEvents(suiteId)
         eventList = otherEvents
@@ -991,8 +991,8 @@ private[scalatest] class HtmlReporter(
         if (sortedSuiteEvents.length == 0)
           throw new IllegalStateException("Expected SuiteStarting for completion event: " + event + " in the head of suite events, but we got no suite event at all")
         sortedSuiteEvents.head match {
-          case suiteStarting: SuiteStarting => 
-            val suiteResult = sortedSuiteEvents.foldLeft(SuiteResult(suiteId, suiteName, suiteClassName, duration, suiteStarting, event, Vector.empty ++ sortedSuiteEvents.tail, 0, 0, 0, 0, 0, 0, false)) { case (r, e) => 
+          case suiteStarting: SuiteStarting =>
+            val suiteResult = sortedSuiteEvents.foldLeft(SuiteResult(suiteId, suiteName, suiteClassName, duration, suiteStarting, event, Vector.empty ++ sortedSuiteEvents.tail, 0, 0, 0, 0, 0, 0, false)) { case (r, e) =>
               e match {
                 case testSucceeded: TestSucceeded => r.copy(testsSucceededCount = r.testsSucceededCount + 1)
                 case testFailed: TestFailed => r.copy(testsFailedCount = r.testsFailedCount + 1)
@@ -1005,15 +1005,15 @@ private[scalatest] class HtmlReporter(
             }
             results += suiteResult
             makeSuiteFile(suiteResult)
-          case other => 
+          case other =>
             throw new IllegalStateException("Expected SuiteStarting for completion event: " + event + " in the head of suite events, but we got: " + other)
         }
-      
+
       case _ => eventList += event
     }
   }
-      
-  def extractSuiteEvents(suiteId: String) = eventList partition { e => 
+
+  def extractSuiteEvents(suiteId: String) = eventList partition { e =>
     e match {
       case e: TestStarting => e.suiteId == suiteId
       case e: TestSucceeded  => e.suiteId == suiteId
@@ -1021,27 +1021,27 @@ private[scalatest] class HtmlReporter(
       case e: TestFailed     => e.suiteId == suiteId
       case e: TestPending    => e.suiteId == suiteId
       case e: TestCanceled   => e.suiteId == suiteId
-      case e: InfoProvided   => 
+      case e: InfoProvided   =>
         e.nameInfo match {
-          case Some(nameInfo) => 
+          case Some(nameInfo) =>
             nameInfo.suiteId == suiteId
           case None => false
         }
-      case e: AlertProvided   => 
+      case e: AlertProvided   =>
         e.nameInfo match {
-          case Some(nameInfo) => 
+          case Some(nameInfo) =>
             nameInfo.suiteId == suiteId
           case None => false
         }
-      case e: NoteProvided   => 
+      case e: NoteProvided   =>
         e.nameInfo match {
-          case Some(nameInfo) => 
+          case Some(nameInfo) =>
             nameInfo.suiteId == suiteId
           case None => false
         }
-      case e: MarkupProvided => 
+      case e: MarkupProvided =>
         e.nameInfo match {
-          case Some(nameInfo) => 
+          case Some(nameInfo) =>
             nameInfo.suiteId == suiteId
           case None => false
         }
@@ -1052,20 +1052,20 @@ private[scalatest] class HtmlReporter(
       case _ => false
     }
   }
-      
+
   def dispose(): Unit = {
     runEndEvent match {
-      case Some(event) => 
+      case Some(event) =>
         event match {
-          case RunCompleted(ordinal, duration, summary, formatter, location, payload, threadName, timeStamp) => 
+          case RunCompleted(ordinal, duration, summary, formatter, location, payload, threadName, timeStamp) =>
             makeIndexFile(Resources.runCompleted, Resources.runCompletedIn _, duration)
 
           case RunStopped(ordinal, duration, summary, formatter, location, payload, threadName, timeStamp) =>
             makeIndexFile(Resources.runStopped, Resources.runStoppedIn _, duration)
 
-          case RunAborted(ordinal, message, throwable, duration, summary, formatter, location, payload, threadName, timeStamp) => 
+          case RunAborted(ordinal, message, throwable, duration, summary, formatter, location, payload, threadName, timeStamp) =>
             makeIndexFile(Resources.runAborted, Resources.runAbortedIn _, duration)
-            
+
           case other =>
             throw new IllegalStateException("Expected run ending event only, but got: " + other.getClass.getName)
         }
@@ -1073,7 +1073,7 @@ private[scalatest] class HtmlReporter(
         makeIndexFile(Resources.runCompleted, Resources.runCompletedIn _, Some(results.totalDuration))
     }
   }
-  
+
   private def getDuration(completeMessageFun: => String, completeInMessageFun: String => String, duration: Option[Long]) = {
     duration match {
       case Some(msSinceEpoch) =>
@@ -1082,19 +1082,19 @@ private[scalatest] class HtmlReporter(
         completeMessageFun
     }
   }
-  
-  private def getTotalTests(summary: Summary) = 
+
+  private def getTotalTests(summary: Summary) =
     Resources.totalNumberOfTestsRun(summary.testsCompletedCount.toString)
-    
+
   // Suites: completed {0}, aborted {1}
-  private def getSuiteSummary(summary: Summary) = 
-    if (summary.scopesPendingCount > 0)       
+  private def getSuiteSummary(summary: Summary) =
+    if (summary.scopesPendingCount > 0)
       Resources.suiteScopeSummary(summary.suitesCompletedCount.toString, summary.suitesAbortedCount.toString, summary.scopesPendingCount.toString)
     else
       Resources.suiteSummary(summary.suitesCompletedCount.toString, summary.suitesAbortedCount.toString)
 
   // Tests: succeeded {0}, failed {1}, canceled {4}, ignored {2}, pending {3}
-  private def getTestSummary(summary: Summary) = 
+  private def getTestSummary(summary: Summary) =
     Resources.testSummary(summary.testsSucceededCount.toString, summary.testsFailedCount.toString, summary.testsCanceledCount.toString, summary.testsIgnoredCount.toString,
       summary.testsPendingCount.toString)
 
@@ -1103,11 +1103,11 @@ private[scalatest] class HtmlReporter(
 
   // Stupid properties file won't let me put spaces at the beginning of a property
   // "  {0}" comes out as "{0}", so I can't do indenting in a localizable way. For now
-  // just indent two space to the left.  //  if (times <= 0) s 
-  //  else Resources.indentOnce(indent(s, times - 1)) 
+  // just indent two space to the left.  //  if (times <= 0) s
+  //  else Resources.indentOnce(indent(s, times - 1))
 }
 
-private[tools] object HtmlReporter {  
+private[tools] object HtmlReporter {
   final val SUCCEEDED_BIT = 1
   final val FAILED_BIT = 2
   final val IGNORED_BIT = 4
