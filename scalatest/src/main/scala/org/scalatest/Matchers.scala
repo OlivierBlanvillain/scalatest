@@ -6633,8 +6633,8 @@ org.scalatest.exceptions.TestFailedException: org.scalatest.Matchers$ResultOfCol
    * ^
    * </pre>
    */
-  def a[T: ClassTag]: ResultOfATypeInvocation[T] =
-    new ResultOfATypeInvocation(classTag.runtimeClass.asInstanceOf[Class[T]])
+  def a[T](implicit ct: ClassTag[T]): ResultOfATypeInvocation[T] =
+    new ResultOfATypeInvocation(ct.runtimeClass.asInstanceOf[Class[T]])
 
   /**
    * This method enables the following syntax:
@@ -6644,8 +6644,8 @@ org.scalatest.exceptions.TestFailedException: org.scalatest.Matchers$ResultOfCol
    * ^
    * </pre>
    */
-  def an[T : ClassTag]: ResultOfAnTypeInvocation[T] =
-    new ResultOfAnTypeInvocation(classTag.runtimeClass.asInstanceOf[Class[T]])
+  def an[T](implicit ct: ClassTag[T]): ResultOfAnTypeInvocation[T] =
+    new ResultOfAnTypeInvocation(ct.runtimeClass.asInstanceOf[Class[T]])
 
   /**
    * This method enables the following syntax:
@@ -6655,8 +6655,8 @@ org.scalatest.exceptions.TestFailedException: org.scalatest.Matchers$ResultOfCol
    * ^
    * </pre>
    */
-  def the[T : ClassTag](implicit pos: source.Position): ResultOfTheTypeInvocation[T] =
-    new ResultOfTheTypeInvocation(classTag.runtimeClass.asInstanceOf[Class[T]], pos)
+  def the[T](implicit ct: ClassTag[T],  pos: source.Position): ResultOfTheTypeInvocation[T] =
+    new ResultOfTheTypeInvocation(ct.runtimeClass.asInstanceOf[Class[T]], pos)
 
   // This is where ShouldMatchers.scala started
 
