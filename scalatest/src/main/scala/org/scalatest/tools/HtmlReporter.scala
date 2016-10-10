@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.scalatest.tools
+package org.scalatest
+package tools
 
 import org.scalatest._
 import org.scalatest.events._
@@ -781,7 +782,7 @@ private[scalatest] class HtmlReporter(
   
   private def testWithDetails(elementId: String, lines: List[String], message: String, throwable: Option[Throwable], indentLevel: Int, styleName: String) = {
     def getHTMLForStackTrace(stackTraceList: List[StackTraceElement]) =
-              stackTraceList.map((ste: StackTraceElement) => <div>{ ste.toString }</div>)
+              stackTraceList.map((ste: StackTraceElement) => new scala.xml.Atom("PLACEHOLDER") /* <div>{ ste.toString }</div> */)
     
     def displayErrorMessage(errorMessage: String) = {
       new scala.xml.Atom("PLACEHOLDER")
