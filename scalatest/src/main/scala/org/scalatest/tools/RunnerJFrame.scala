@@ -76,7 +76,7 @@ import Suite.xmlContent
  * events that would take up a lot of memory.
  *
  * @author Bill Venners
- */                 
+ */
 private[scalatest] class RunnerJFrame(
   val eventTypesToCollect: Set[EventToPresent],
   reporterConfigurations: ReporterConfigurations,
@@ -84,12 +84,12 @@ private[scalatest] class RunnerJFrame(
   agains: List[String],
   testSpecs: List[TestSpec],
   junitsList: List[String],
-  runpathList: List[String], 
+  runpathList: List[String],
   tagsToIncludeSet: Set[String],
   tagsToExcludeSet: Set[String],
   propertiesMap: ConfigMap,
   concurrent: Boolean,
-  memberOfList: List[String], 
+  memberOfList: List[String],
   beginsWithList: List[String],
   testNGList: List[String],
   passFailReporter: Option[Reporter],
@@ -100,7 +100,7 @@ private[scalatest] class RunnerJFrame(
   slowpokeDetectionDelay: Long,
   slowpokeDetectionPeriod: Long
 ) extends JFrame(Resources.ScalaTestTitle) with RunDoneListener with RunnerGUI {
-  
+
   // This should only be updated by the event handler thread.
   private var currentState: RunnerGUIState = RunningState
 
@@ -150,7 +150,7 @@ private[scalatest] class RunnerJFrame(
 
   private val graphicRunReporter: Reporter = new GraphicRunReporter
   private val graphicRerunReporter: Reporter = new GraphicRerunReporter
-  
+
   class ResettableStopper extends Stopper {
     @volatile private var stopWasRequested = false
     def stopRequested: Boolean = stopWasRequested
@@ -280,7 +280,7 @@ private[scalatest] class RunnerJFrame(
 
             val event: Event = holder.event
             val isRerun: Boolean = holder.isRerun
-  
+
             val fontSize = eventsJList.getFont.getSize
 
             val title = RunnerJFrame.getEventToPresentDisplayMessage(event, isRerun)
@@ -293,7 +293,7 @@ private[scalatest] class RunnerJFrame(
                 case _ => false
               }
 
-            val fileAndLineOption: Option[String] = 
+            val fileAndLineOption: Option[String] =
               holder.throwable match {
                 case Some(throwable) =>
                   throwable match {
@@ -304,7 +304,7 @@ private[scalatest] class RunnerJFrame(
                 case None => None
               }
 
-              val throwableTitle = 
+              val throwableTitle =
                 holder.throwable match {
                   case Some(throwable) => Some(throwable.getClass.getName)
                   case None => None
@@ -321,12 +321,12 @@ private[scalatest] class RunnerJFrame(
                       case tfe: TestFailedException =>
                         (stackTraceElements.take(tfe.failedCodeStackDepth), stackTraceElements.drop(tfe.failedCodeStackDepth))
                       case _ => (List(), stackTraceElements)
-                    } 
+                    }
                   case None => (List(), List())
                 }
 
             def getHTMLForStackTrace(stackTraceList: List[StackTraceElement]) =
-              stackTraceList.map((ste: StackTraceElement) => <span>{ ste.toString }</span><br />)
+              stackTraceList.map((ste: StackTraceElement) => new scala.xml.Elem(null, "PLACEHOLDER", scala.xml.Null, scala.xml.TopScope)/* <span>{ ste.toString }</span><br /> */)
 
             def getHTMLForCause(throwable: Throwable): scala.xml.NodeBuffer = {
               val cause = throwable.getCause
@@ -368,10 +368,10 @@ private[scalatest] class RunnerJFrame(
                   if (trimmed.length > 0) Some(trimmed) else None
                     case _ => None
               }
-            
+
             import EventHolder.suiteAndTestName
 
-            def nameFromNameInfo(nameInfo: Option[NameInfo]): Option[String] = 
+            def nameFromNameInfo(nameInfo: Option[NameInfo]): Option[String] =
               nameInfo match {
                 case Some(NameInfo(suiteName, suiteId, suiteClassName, testName)) =>
                   testName match {
@@ -406,15 +406,15 @@ private[scalatest] class RunnerJFrame(
                 case event: TestSucceeded => Some(suiteAndTestName(event.suiteName, event.testName))
                 case event: TestFailed => Some(suiteAndTestName(event.suiteName, event.testName))
               }
-            
-            def suiteIdFromNameInfo(nameInfo: Option[NameInfo]): Option[String] = 
+
+            def suiteIdFromNameInfo(nameInfo: Option[NameInfo]): Option[String] =
               nameInfo match {
                 case Some(NameInfo(suiteName, suiteId, suiteClassName, testName)) =>
                   Some(suiteId)
                 case None => None
               }
-            
-            val suiteId = 
+
+            val suiteId =
               holder.event match {
                 case event: DiscoveryStarting => None
                 case event: DiscoveryCompleted => None
@@ -636,7 +636,7 @@ private[scalatest] class RunnerJFrame(
 
     val menuBar: JMenuBar = new JMenuBar()
 
-    // The ScalaTest menu 
+    // The ScalaTest menu
     val scalaTestMenu: JMenu = new JMenu(Resources.ScalaTestMenu)
     scalaTestMenu.setMnemonic(KeyEvent.VK_S)
     menuBar.add(scalaTestMenu)
@@ -915,12 +915,12 @@ private[scalatest] class RunnerJFrame(
             progressBarPanel.runStarting(testCount)
             statusJPanel.reset()
             statusJPanel.setTestsExpected(testCount)
-  
+
             // This should already have been cleared by prepUIForStarting, but
             // doing it again here for the heck of it.
             collectedEvents = eventHolder :: Nil
             eventsListModel.clear()
-  
+
             detailsJEditorPane.setText("")
 
             if (viewOptions.contains(PresentRunStarting))
@@ -934,20 +934,20 @@ private[scalatest] class RunnerJFrame(
           // and that looks bad and is wrong to boot.
           // Reordering this outside the event handler thread so that the GUI won't be frozen
           // during a long sort. The RunCompleted event isn't yet in the list when the sort happens, so
-          // it will just be added at the end. 
+          // it will just be added at the end.
           reorderCollectedEvents()
           usingEventDispatchThread {
             registerEvent(event)
             refreshEventsJList()
           }
-  
-        case RunAborted(ordinal, message, throwable, duration, summary, formatter, location, payload, threadName, timeStamp) => 
+
+        case RunAborted(ordinal, message, throwable, duration, summary, formatter, location, payload, threadName, timeStamp) =>
 
           usingEventDispatchThread {
             progressBarPanel.runAborted()
             registerEvent(event)
             // Must do this here, not in RunningState.runFinished, because the runFinished
-            // invocation can happen before this runCompleted invocation, which means that 
+            // invocation can happen before this runCompleted invocation, which means that
             // the first error in the run may not be in the JList model yet. So must wait until
             // a run completes. I was doing it in runCompleted, which works, but for long runs
             // you must wait a long time for that thing to be selected. Nice if it gets selected
@@ -969,20 +969,20 @@ private[scalatest] class RunnerJFrame(
           usingEventDispatchThread {
             registerEvent(event)
           }
-  
-        case SuiteCompleted(ordinal, suiteName, suiteId, suiteClassName, duration, formatter, location, rerunner, payload, threadName, timeStamp) => 
-  
+
+        case SuiteCompleted(ordinal, suiteName, suiteId, suiteClassName, duration, formatter, location, rerunner, payload, threadName, timeStamp) =>
+
           usingEventDispatchThread {
             registerEvent(event)
           }
 
-        case SuiteAborted(ordinal, message, suiteName, suiteId, suiteClassName, throwable, duration, formatter, location, rerunner, payload, threadName, timeStamp) => 
+        case SuiteAborted(ordinal, message, suiteName, suiteId, suiteClassName, throwable, duration, formatter, location, rerunner, payload, threadName, timeStamp) =>
 
           usingEventDispatchThread {
             progressBarPanel.suiteAborted()
             registerEvent(event)
             // Must do this here, not in RunningState.runFinished, because the runFinished
-            // invocation can happen before this runCompleted invocation, which means that 
+            // invocation can happen before this runCompleted invocation, which means that
             // the first error in the run may not be in the JList model yet. So must wait until
             // a run completes. I was doing it in runCompleted, which works, but for long runs
             // you must wait a long time for that thing to be selected. Nice if it gets selected
@@ -991,17 +991,17 @@ private[scalatest] class RunnerJFrame(
           }
 
         case TestStarting(ordinal, suiteName, suiteId, suiteClassName, testName, testText, formatter, location, rerunner, payload, threadName, timeStamp) =>
-  
-          usingEventDispatchThread {
-            registerEvent(event)
-          }
-
-        case TestIgnored(ordinal, suiteName, suiteId, suiteClassName, testName, testText, formatter, location, payload, threadName, timeStamp) => 
 
           usingEventDispatchThread {
             registerEvent(event)
           }
-  
+
+        case TestIgnored(ordinal, suiteName, suiteId, suiteClassName, testName, testText, formatter, location, payload, threadName, timeStamp) =>
+
+          usingEventDispatchThread {
+            registerEvent(event)
+          }
+
         case TestPending(ordinal, suiteName, suiteId, suiteClassName, testName, testText, recordedEvents, duration, formatter, location, payload, threadName, timeStamp) =>
 
           usingEventDispatchThread {
@@ -1023,7 +1023,7 @@ private[scalatest] class RunnerJFrame(
           }
 
         case TestSucceeded(ordinal, suiteName, suiteId, suiteClassName, testName, testText, recordedEvents, duration, formatter, location, rerunner, payload, threadName, timeStamp) =>
-  
+
           usingEventDispatchThread {
             testsCompletedCount += 1
             statusJPanel.setTestsRun(testsCompletedCount, true)
@@ -1031,7 +1031,7 @@ private[scalatest] class RunnerJFrame(
             registerEvent(event)
             recordedEvents.foreach(registerEvent(_))
           }
-  
+
         case TestFailed(ordinal, message, suiteName, suiteId, suiteClassName, testName, testText, recordedEvents, throwable, duration, formatter, location, rerunner, payload, threadName, timeStamp) =>
 
           usingEventDispatchThread {
@@ -1043,7 +1043,7 @@ private[scalatest] class RunnerJFrame(
             registerEvent(event)
             recordedEvents.foreach(registerEvent(_))
             // Must do this here, not in RunningState.runFinished, because the runFinished
-            // invocation can happen before this runCompleted invocation, which means that 
+            // invocation can happen before this runCompleted invocation, which means that
             // the first error in the run may not be in the JList model yet. So must wait until
             // a run completes. I was doing it in runCompleted, which works, but for long runs
             // you must wait a long time for that thing to be selected. Nice if it gets selected
@@ -1080,12 +1080,12 @@ private[scalatest] class RunnerJFrame(
           usingEventDispatchThread {
             registerEvent(event)
           }
-          
+
         case ScopePending(ordinal, message, nameInfo, formatter, location, payload, threadName, timeStamp) =>
           usingEventDispatchThread {
             registerEvent(event)
           }
-          
+
         case MarkupProvided(ordinal, message, nameInfo, formatter, location, payload, threadName, timeStamp) =>
           usingEventDispatchThread {
             registerEvent(event)
@@ -1152,7 +1152,7 @@ private[scalatest] class RunnerJFrame(
     rerunColorBox.setGray()
 
     // Clear the selection, so it can scroll to an error
-    eventsJList.clearSelection() 
+    eventsJList.clearSelection()
   }
 
   // This must be called by the event handler thread
@@ -1281,7 +1281,7 @@ private[scalatest] class RunnerJFrame(
           case Some(indexOfRunStartingEventForLastRerun) =>
 
             val indexToEnsureIsVisible =
-              if (indexOfRunStartingEventForLastRerun + numCellsVisible < indexOfLastEvent) 
+              if (indexOfRunStartingEventForLastRerun + numCellsVisible < indexOfLastEvent)
                 indexOfRunStartingEventForLastRerun + numCellsVisible
               else
                 indexOfLastEvent
@@ -1335,7 +1335,7 @@ private[scalatest] class RunnerJFrame(
       None
     else {
       holder.rerunner match {
-        case Some(rerunner) => 
+        case Some(rerunner) =>
           holder.event match {
             case e: TestStarting => Some(new TestRerunner(rerunner, e.testName))
             case e: TestSucceeded => Some(new TestRerunner(rerunner, e.testName))
@@ -1371,13 +1371,13 @@ private[scalatest] class RunnerJFrame(
           // Create the Report outside of the event handler thread, because otherwise
           // the event handler thread shows up as the originating thread of this event,
           // and that looks bad and is actually wrong.
-  
+
           usingEventDispatchThread {
             rerunTestsCompletedCount = 0
             rerunColorBox.setMax(testCount)
             rerunColorBox.setValue(0)
             rerunColorBox.setGreen()
-  
+
             registerRerunEvent(event)
             anErrorHasOccurredAlready = false;
           }
@@ -1392,8 +1392,8 @@ private[scalatest] class RunnerJFrame(
             registerRerunEvent(event)
             scrollTheRerunStartingEventToTheTopOfVisibleEvents()
           }
-  
-        case RunAborted(ordinal, message, throwable, duration, summary, formatter, location, payload, threadName, timeStamp) => 
+
+        case RunAborted(ordinal, message, throwable, duration, summary, formatter, location, payload, threadName, timeStamp) =>
 
           usingEventDispatchThread {
             progressBarPanel.runAborted()
@@ -1406,7 +1406,7 @@ private[scalatest] class RunnerJFrame(
           }
 
         case RunStopped(ordinal, duration, summary, formatter, location, payload, threadName, timeStamp) =>
-  
+
           // Create the Report outside of the event handler thread, because otherwise
           // the event handler thread shows up as the originating thread of this event,
           // and that looks bad and is actually wrong.
@@ -1420,14 +1420,14 @@ private[scalatest] class RunnerJFrame(
           usingEventDispatchThread {
             registerRerunEvent(event)
           }
-  
-        case SuiteCompleted(ordinal, suiteName, suiteId, suiteClassName, duration, formatter, location, rerunner, payload, threadName, timeStamp) => 
-  
+
+        case SuiteCompleted(ordinal, suiteName, suiteId, suiteClassName, duration, formatter, location, rerunner, payload, threadName, timeStamp) =>
+
           usingEventDispatchThread {
             registerRerunEvent(event)
           }
 
-        case SuiteAborted(ordinal, message, suiteName, suiteId, suiteClassName, throwable, duration, formatter, location, rerunner, payload, threadName, timeStamp) => 
+        case SuiteAborted(ordinal, message, suiteName, suiteId, suiteClassName, throwable, duration, formatter, location, rerunner, payload, threadName, timeStamp) =>
 
           usingEventDispatchThread {
             rerunColorBox.setRed()
@@ -1437,14 +1437,14 @@ private[scalatest] class RunnerJFrame(
               anErrorHasOccurredAlready = true
             }
           }
- 
+
         case TestStarting(ordinal, suiteName, suiteId, suiteClassName, testName, testText, formatter, location, rerunner, payload, threadName, timeStamp) =>
 
           usingEventDispatchThread {
             registerRerunEvent(event)
           }
-  
-        case TestIgnored(ordinal, suiteName, suiteId, suiteClassName, testName, testText, formatter, location, payload, threadName, timeStamp) => 
+
+        case TestIgnored(ordinal, suiteName, suiteId, suiteClassName, testName, testText, formatter, location, payload, threadName, timeStamp) =>
 
           usingEventDispatchThread {
             rerunColorBox.setValue(rerunTestsCompletedCount)
@@ -1489,43 +1489,43 @@ private[scalatest] class RunnerJFrame(
               anErrorHasOccurredAlready = true
             }
           }
-  
+
         case InfoProvided(ordinal, message, nameInfo, throwable, formatter, location, payload, threadName, timeStamp) =>
 
           usingEventDispatchThread {
             registerRerunEvent(event)
           }
-  
+
         case AlertProvided(ordinal, message, nameInfo, throwable, formatter, location, payload, threadName, timeStamp) =>
 
           usingEventDispatchThread {
             registerRerunEvent(event)
           }
-  
+
         case NoteProvided(ordinal, message, nameInfo, throwable, formatter, location, payload, threadName, timeStamp) =>
 
           usingEventDispatchThread {
             registerRerunEvent(event)
           }
-  
+
         case ScopeOpened(ordinal, message, nameInfo, formatter, location, payload, threadName, timeStamp) =>
 
           usingEventDispatchThread {
             registerRerunEvent(event)
           }
-  
+
         case ScopeClosed(ordinal, message, nameInfo, formatter, location, payload, threadName, timeStamp) =>
 
           usingEventDispatchThread {
             registerRerunEvent(event)
           }
-  
+
         case ScopePending(ordinal, message, nameInfo, formatter, location, payload, threadName, timeStamp) =>
 
           usingEventDispatchThread {
             registerRerunEvent(event)
           }
-          
+
         case MarkupProvided(ordinal, message, nameInfo, formatter, location, payload, threadName, timeStamp) =>
           usingEventDispatchThread {
             registerRerunEvent(event)
@@ -1546,7 +1546,7 @@ private[scalatest] class RunnerJFrame(
   private class RunnerThread extends Thread {
 
     override def run(): Unit = {
-  
+
       withClassLoaderAndDispatchReporter(
         runpathList,
         reporterConfigurations,
@@ -1593,7 +1593,7 @@ private[scalatest] class RunnerJFrame(
     requireNonNull(rerun)
 
     override def run(): Unit = {
-  
+
       val distributor: Option[Distributor] = None
 
       val tracker = new Tracker(new Ordinal(nextRunStamp))

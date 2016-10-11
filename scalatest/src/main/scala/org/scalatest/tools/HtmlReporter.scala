@@ -227,7 +227,7 @@ private[scalatest] class HtmlReporter(
     s + (if (suiteResult.testsFailedCount > 0) "_failed" else "_passed")
 
   private def getSuiteHtml(name: String, suiteResult: SuiteResult) =
-    new scala.xml.Atom("PLACEHOLDER")
+    new scala.xml.Elem(null, "PLACEHOLDER", scala.xml.Null, scala.xml.TopScope)
     // <html>
       // <head>
         // <title>ScalaTest Suite { name } Results</title>
@@ -632,7 +632,7 @@ private[scalatest] class HtmlReporter(
 
   // TODO: This needs to be internationalized
   private def getStatistic(summary: Summary) =
-    new scala.xml.Atom("PLACEHOLDER")
+    new scala.xml.Elem(null, "PLACEHOLDER", scala.xml.Null, scala.xml.TopScope)
     // <div id="display-filters">
       // <input id="succeeded_checkbox" name="succeeded_checkbox" type="checkbox" checked="checked" onchange="applyFilter()" /> <label id="succeeded_checkbox_label" for="passed_checkbox">Succeeded</label>
       // <input id="failed_checkbox" name="failed_checkbox" type="checkbox" checked="checked" onchange="applyFilter()" /> <label id="failed_checkbox_label" for="failed_checkbox">Failed</label>
@@ -642,7 +642,7 @@ private[scalatest] class HtmlReporter(
     // </div>
 
   private def header(completeMessageFun: => String, completeInMessageFun: String => String, duration: Option[Long], summary: Summary) =
-    new scala.xml.Atom("PLACEHOLDER")
+    new scala.xml.Elem(null, "PLACEHOLDER", scala.xml.Null, scala.xml.TopScope)
     // <div id="scalatest-header" class={ getHeaderStatusColor(summary) }>
       // <div id="title">
         // ScalaTest Results
@@ -668,7 +668,7 @@ private[scalatest] class HtmlReporter(
   val tagMap = collection.mutable.HashMap[String, Int]()
 
   private def suiteResults =
-    new scala.xml.Atom("PLACEHOLDER")
+    new scala.xml.Elem(null, "PLACEHOLDER", scala.xml.Null, scala.xml.TopScope)
     // <table class="sortable">
       // <tr>
         // <td>Suite</td>
@@ -737,7 +737,7 @@ private[scalatest] class HtmlReporter(
 
   private def suiteSummary(elementId: String, suiteFileName: String, suiteResult: SuiteResult) = {
     import suiteResult._
-    new scala.xml.Atom("PLACEHOLDER")
+    new scala.xml.Elem(null, "PLACEHOLDER", scala.xml.Null, scala.xml.TopScope)
     // <tr id={ elementId }>
       // <td class={ appendCombinedStatus("suite_name", suiteResult) }><a href={ "javascript: showDetails('" + suiteFileName + "')" }>{ suiteName }</a></td>
       // <td class={ appendCombinedStatus("duration", suiteResult) }>{ durationDisplay(duration) }</td>
@@ -763,13 +763,13 @@ private[scalatest] class HtmlReporter(
     }
 
   private def scope(elementId: String, message: String, indentLevel: Int) =
-    new scala.xml.Atom("PLACEHOLDER")
+    new scala.xml.Elem(null, "PLACEHOLDER", scala.xml.Null, scala.xml.TopScope)
     // <div id={ elementId } class="scope" style={ "margin-left: " + (specIndent * oneLess(indentLevel)) + "px;" }>
       // { message }
     // </div>
 
   private def test(elementId: String, lines: List[String], indentLevel: Int, styleName: String) =
-    new scala.xml.Atom("PLACEHOLDER")
+    new scala.xml.Elem(null, "PLACEHOLDER", scala.xml.Null, scala.xml.TopScope)
     // <div id={ elementId } class={ styleName } style={ "margin-left: " + (specIndent * twoLess(indentLevel)) + "px;" }>
       // <dl>
         // {
@@ -782,10 +782,10 @@ private[scalatest] class HtmlReporter(
 
   private def testWithDetails(elementId: String, lines: List[String], message: String, throwable: Option[Throwable], indentLevel: Int, styleName: String) = {
     def getHTMLForStackTrace(stackTraceList: List[StackTraceElement]) =
-              stackTraceList.map((ste: StackTraceElement) => new scala.xml.Atom("PLACEHOLDER") /* <div>{ ste.toString }</div> */)
+              stackTraceList.map((ste: StackTraceElement) => new scala.xml.Elem(null, "PLACEHOLDER", scala.xml.Null, scala.xml.TopScope) /* <div>{ ste.toString }</div> */)
 
     def displayErrorMessage(errorMessage: String) = {
-      new scala.xml.Atom("PLACEHOLDER")
+      new scala.xml.Elem(null, "PLACEHOLDER", scala.xml.Null, scala.xml.TopScope)
       // scala automatically change <br /> to <br></br>, which will cause 2 line breaks, use unparsedXml("<br />") to solve it.
       // val messageLines = errorMessage.split("\n")
       // if (messageLines.size > 1)
@@ -855,7 +855,7 @@ private[scalatest] class HtmlReporter(
 
     val linkId = UUID.randomUUID.toString
     val contentId = UUID.randomUUID.toString
-    new scala.xml.Atom("PLACEHOLDER")
+    new scala.xml.Elem(null, "PLACEHOLDER", scala.xml.Null, scala.xml.TopScope)
     // // <div id={ elementId } class={ styleName } style={ "margin-left: " + (specIndent * twoLess(indentLevel)) + "px;" }>
     //   // <dl>
     //     {
@@ -925,7 +925,7 @@ private[scalatest] class HtmlReporter(
        //   }
        // }
     // </div>
-    new scala.xml.Atom("PLACEHOLDER")
+    new scala.xml.Elem(null, "PLACEHOLDER", scala.xml.Null, scala.xml.TopScope)
   }
 
   private def tagMapScript =

@@ -24,7 +24,7 @@ import java.io.{StringWriter, PrintWriter}
 import java.util.concurrent.atomic.{AtomicInteger, AtomicBoolean, AtomicReference}
 import java.util.concurrent.{ThreadFactory, Executors, ExecutorService, LinkedBlockingQueue}
 import org.scalatest.time.{Span, Millis}
-import sbt.testing.{SbtFramework, SubclassFingerprint, AnnotatedFingerprint, TaskDef, EventHandler, Selector, Logger, Task, Fingerprint, EventHandler, SuiteSelector, SuiteSelector, TestSelector, TestWildcardSelector, NestedSuiteSelector, NestedTestSelector, TaskDef, Selector, Task, EventHandler, Logger, Logger, Selector, TaskDef, TaskDef, TaskDef, TaskDef, TaskDef, TaskDef, Task, SbtRunner, SbtStatus, OptionalThrowable, SbtEvent}
+import sbt.testing.{SubclassFingerprint, AnnotatedFingerprint, TaskDef, EventHandler, Selector, Logger, Task, Fingerprint, EventHandler, SuiteSelector, SuiteSelector, TestSelector, TestWildcardSelector, NestedSuiteSelector, NestedTestSelector, TaskDef, Selector, Task, EventHandler, Logger, Logger, Selector, TaskDef, TaskDef, TaskDef, TaskDef, TaskDef, TaskDef, Task, SbtRunner, Status, OptionalThrowable}
 import scala.collection.mutable.ListBuffer
 import scala.util.control.NonFatal
 import StringReporter.fragmentsForEvent
@@ -192,7 +192,7 @@ import Suite.mergeMap
  *
  * @author Chee Seng
  */
-class Framework extends SbtFramework {
+class Framework extends sbt.testing.Framework {
 
   /**
    * Test framework name.
@@ -417,10 +417,11 @@ class Framework extends SbtFramework {
         if (annotationClass.isAnnotationPresent(classOf[TagAnnotation]) || annotationClass.isAssignableFrom(classOf[TagAnnotation]))
       } yield {
         val value =
-          if (a.isInstanceOf[TagAnnotation])
-            a.asInstanceOf[TagAnnotation].value
-          else
-            annotationClass.getAnnotation(classOf[TagAnnotation]).value
+         ""
+          // if (a.isInstanceOf[TagAnnotation])
+          //   a.asInstanceOf[TagAnnotation].value ANO
+          // else
+          //   annotationClass.getAnnotation(classOf[TagAnnotation]).value
         if (value == "")
           annotationClass.getName
         else
@@ -429,13 +430,13 @@ class Framework extends SbtFramework {
 
     def execute(eventHandler: EventHandler, loggers: Array[Logger]) = {
       if (accessible || runnable) {
-        val suite =
+        val suite: Suite =
           try {
             if (accessible)
               suiteClass.newInstance.asInstanceOf[Suite]
             else {
               val wrapWithAnnotation = suiteClass.getAnnotation(classOf[WrapWith])
-              val suiteClazz = wrapWithAnnotation.value
+              val suiteClazz: Class[_ <: Suite] = ??? // wrapWithAnnotation.value
               val constructorList = suiteClazz.getDeclaredConstructors()
               val constructor = constructorList.find { c =>
                 val types = c.getParameterTypes
@@ -895,7 +896,7 @@ import java.net.{ServerSocket, InetAddress}
    * @return a <code>Runner</code> implementation representing the newly started run to run ScalaTest's tests.
    * @throws IllegalArgumentException when invalid or unsupported argument is passed
    */
-  def runner(args: Array[String], remoteArgs: Array[String], testClassLoader: ClassLoader): SbtRunner = {
+  def runner(args: Array[String], remoteArgs: Array[String], testClassLoader: ClassLoader): sbt.testing.Runner = {
 
     val ParsedArgs(
       runpathArgs,
@@ -1068,9 +1069,9 @@ import java.net.{ServerSocket, InetAddress}
       fullyQualifiedName: String,
       fingerprint: Fingerprint,
       selector: Selector,
-      status: SbtStatus,
+      status: sbt.testing.Status,
       throwable: OptionalThrowable,
-      duration: Long) extends SbtEvent
+      duration: Long) extends sbt.testing.Event
 
   private class SbtReporter(suiteId: String, fullyQualifiedName: String, fingerprint: Fingerprint, eventHandler: EventHandler, report: Reporter, summaryCounter: SummaryCounter) extends Reporter {
 
@@ -1102,24 +1103,24 @@ import java.net.{ServerSocket, InetAddress}
           // the results of running an actual test
           case t: TestPending =>
             summaryCounter.incrementTestsPendingCount()
-            eventHandler.handle(ScalaTestSbtEvent(fullyQualifiedName, fingerprint, getTestSelector(t.suiteId, t.testName), SbtStatus.Pending, new OptionalThrowable, t.duration.getOrElse(0)))
+            eventHandler.handle(ScalaTestSbtEvent(fullyQualifiedName, fingerprint, getTestSelector(t.suiteId, t.testName), sbt.testing.Status.Pending, new OptionalThrowable, t.duration.getOrElse(0)))
           case t: TestFailed =>
             summaryCounter.incrementTestsFailedCount()
-            eventHandler.handle(ScalaTestSbtEvent(fullyQualifiedName, fingerprint, getTestSelector(t.suiteId, t.testName), SbtStatus.Failure, getOptionalThrowable(t.throwable), t.duration.getOrElse(0)))
+            eventHandler.handle(ScalaTestSbtEvent(fullyQualifiedName, fingerprint, getTestSelector(t.suiteId, t.testName), sbt.testing.Status.Failure, getOptionalThrowable(t.throwable), t.duration.getOrElse(0)))
           case t: TestSucceeded =>
             summaryCounter.incrementTestsSucceededCount()
-            eventHandler.handle(ScalaTestSbtEvent(fullyQualifiedName, fingerprint, getTestSelector(t.suiteId, t.testName), SbtStatus.Success, new OptionalThrowable, t.duration.getOrElse(0)))
+            eventHandler.handle(ScalaTestSbtEvent(fullyQualifiedName, fingerprint, getTestSelector(t.suiteId, t.testName), sbt.testing.Status.Success, new OptionalThrowable, t.duration.getOrElse(0)))
           case t: TestIgnored =>
             summaryCounter.incrementTestsIgnoredCount()
-            eventHandler.handle(ScalaTestSbtEvent(fullyQualifiedName, fingerprint, getTestSelector(t.suiteId, t.testName), SbtStatus.Ignored, new OptionalThrowable, -1))
+            eventHandler.handle(ScalaTestSbtEvent(fullyQualifiedName, fingerprint, getTestSelector(t.suiteId, t.testName), sbt.testing.Status.Ignored, new OptionalThrowable, -1))
           case t: TestCanceled =>
             summaryCounter.incrementTestsCanceledCount()
-            eventHandler.handle(ScalaTestSbtEvent(fullyQualifiedName, fingerprint, getTestSelector(t.suiteId, t.testName), SbtStatus.Canceled, new OptionalThrowable, t.duration.getOrElse(0)))
+            eventHandler.handle(ScalaTestSbtEvent(fullyQualifiedName, fingerprint, getTestSelector(t.suiteId, t.testName), sbt.testing.Status.Canceled, new OptionalThrowable, t.duration.getOrElse(0)))
           case t: SuiteCompleted =>
             summaryCounter.incrementSuitesCompletedCount()
           case t: SuiteAborted =>
             summaryCounter.incrementSuitesAbortedCount()
-            eventHandler.handle(ScalaTestSbtEvent(fullyQualifiedName, fingerprint, getSuiteSelector(t.suiteId), SbtStatus.Error, getOptionalThrowable(t.throwable), t.duration.getOrElse(0)))
+            eventHandler.handle(ScalaTestSbtEvent(fullyQualifiedName, fingerprint, getSuiteSelector(t.suiteId), sbt.testing.Status.Error, getOptionalThrowable(t.throwable), t.duration.getOrElse(0)))
           case t: ScopePending =>
             summaryCounter.incrementScopesPendingCount()
           case _ =>
