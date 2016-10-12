@@ -24,7 +24,7 @@ import java.io.{StringWriter, PrintWriter}
 import java.util.concurrent.atomic.{AtomicInteger, AtomicBoolean, AtomicReference}
 import java.util.concurrent.{ThreadFactory, Executors, ExecutorService, LinkedBlockingQueue}
 import org.scalatest.time.{Span, Millis}
-import sbt.testing.{SubclassFingerprint, AnnotatedFingerprint, TaskDef, EventHandler, Selector, Logger, Task, Fingerprint, EventHandler, SuiteSelector, SuiteSelector, TestSelector, TestWildcardSelector, NestedSuiteSelector, NestedTestSelector, TaskDef, Selector, Task, EventHandler, Logger, Logger, Selector, TaskDef, TaskDef, TaskDef, TaskDef, TaskDef, TaskDef, Task, SbtRunner, Status, OptionalThrowable}
+import sbt.testing.{SubclassFingerprint, AnnotatedFingerprint, TaskDef, EventHandler, Selector, Logger, Task, Fingerprint, EventHandler, SuiteSelector, SuiteSelector, TestSelector, TestWildcardSelector, NestedSuiteSelector, NestedTestSelector, TaskDef, Selector, Task, EventHandler, Logger, Logger, Selector, TaskDef, TaskDef, TaskDef, TaskDef, TaskDef, TaskDef, Task, SbtRunner, OptionalThrowable}
 import scala.collection.mutable.ListBuffer
 import scala.util.control.NonFatal
 import StringReporter.fragmentsForEvent
