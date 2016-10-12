@@ -201,7 +201,7 @@ class ScalaTestFramework extends SbtFramework {
               slowpokeDetectionPeriod.getAndSet(60000L)
           }
 
-          org.scalatest.tools.Runner.spanScaleFactor = parseDoubleArgument(spanScaleFactors, "-F", 1.0)
+          Runner.spanScaleFactor = parseDoubleArgument(spanScaleFactors, "-F", 1.0)
 
           val fullReporterConfigurations = parseReporterArgsIntoConfigurations(reporterArgs)
           val sbtNoFormat = java.lang.Boolean.getBoolean("sbt.log.noformat")

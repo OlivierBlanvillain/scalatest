@@ -127,9 +127,9 @@ object ScalatestBuild extends Build {
             <email>cheeseng@amaseng.com</email>
           </developer>
         </developers>
-      )
+      ),
+    credentials += getNexusCredentials
     // ,
-    // credentials += getNexusCredentials,
     // pgpSecretRing := file(getGPGFilePath),
     // pgpPassphrase := getGPGPassphase
   )
