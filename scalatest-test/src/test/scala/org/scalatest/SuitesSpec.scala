@@ -18,7 +18,7 @@ package org.scalatest
 import SharedHelpers._
 import Suite.CHOSEN_STYLES
 import org.scalatest.exceptions.NotAllowedException
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 
 class SuitesSpec extends FunSpec {
 

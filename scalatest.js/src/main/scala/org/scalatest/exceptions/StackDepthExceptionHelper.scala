@@ -16,7 +16,7 @@
 package org.scalatest.exceptions
 
 import org.scalactic._
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 
 private[scalatest] object StackDepthExceptionHelper {
 

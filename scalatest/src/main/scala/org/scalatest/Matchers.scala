@@ -3072,41 +3072,43 @@ trait Matchers extends Assertions with Tolerance with ShouldVerb with MatcherWor
   private case object NoCollected extends Collected
   private case class ExactlyCollected(num: Int) extends Collected
 
-  private[scalatest] def doCollected[T](collected: Collected, xs: scala.collection.GenTraversable[T], original: Any, prettifier: Prettifier, pos: source.Position)(fun: T => Assertion): Assertion = {
+  private[scalatest] def doCollected[T](collected: Collected, xs: scala.collection.GenTraversable[T], original: Any, prettifier: Prettifier, pos: source.Position)(fun: T => Assertion): Assertion =
+    ??? // TODO
+  // {
 
-    val asserting = InspectorAsserting.assertingNatureOfAssertion
+  //   val asserting = InspectorAsserting.assertingNatureOfAssertion
 
-    collected match {
-      case AllCollected =>
-        asserting.forAll(xs, original, true, prettifier, pos) { e =>
-          fun(e)
-        }
-      case AtLeastCollected(num) =>
-        asserting.forAtLeast(num, xs, original, true, prettifier, pos) { e =>
-          fun(e)
-        }
-      case EveryCollected =>
-        asserting.forEvery(xs, original, true, prettifier, pos) { e =>
-          fun(e)
-        }
-      case ExactlyCollected(num) =>
-        asserting.forExactly(num, xs, original, true, prettifier, pos) { e =>
-          fun(e)
-        }
-      case NoCollected =>
-        asserting.forNo(xs, original, true, prettifier, pos) { e =>
-          fun(e)
-        }
-      case BetweenCollected(from, to) =>
-        asserting.forBetween(from, to, xs, original, true, prettifier, pos) { e =>
-          fun(e)
-        }
-      case AtMostCollected(num) =>
-        asserting.forAtMost(num, xs, original, true, prettifier, pos) { e =>
-          fun(e)
-        }
-    }
-  }
+  //   collected match {
+  //     case AllCollected =>
+  //       asserting.forAll(xs, original, true, prettifier, pos) { e =>
+  //         fun(e)
+  //       }
+  //     case AtLeastCollected(num) =>
+  //       asserting.forAtLeast(num, xs, original, true, prettifier, pos) { e =>
+  //         fun(e)
+  //       }
+  //     case EveryCollected =>
+  //       asserting.forEvery(xs, original, true, prettifier, pos) { e =>
+  //         fun(e)
+  //       }
+  //     case ExactlyCollected(num) =>
+  //       asserting.forExactly(num, xs, original, true, prettifier, pos) { e =>
+  //         fun(e)
+  //       }
+  //     case NoCollected =>
+  //       asserting.forNo(xs, original, true, prettifier, pos) { e =>
+  //         fun(e)
+  //       }
+  //     case BetweenCollected(from, to) =>
+  //       asserting.forBetween(from, to, xs, original, true, prettifier, pos) { e =>
+  //         fun(e)
+  //       }
+  //     case AtMostCollected(num) =>
+  //       asserting.forAtMost(num, xs, original, true, prettifier, pos) { e =>
+  //         fun(e)
+  //       }
+  //   }
+  // }
 
   /**
    * This class is part of the ScalaTest matchers DSL. Please see the documentation for <a href="InspectorsMatchers.html"><code>InspectorsMatchers</code></a> for an overview of
@@ -6633,8 +6635,8 @@ org.scalatest.exceptions.TestFailedException: org.scalatest.Matchers$ResultOfCol
    * ^
    * </pre>
    */
-  def a[T: ClassTag]: ResultOfATypeInvocation[T] =
-    new ResultOfATypeInvocation(classTag.runtimeClass.asInstanceOf[Class[T]])
+  def a[T](implicit ct: ClassTag[T]): ResultOfATypeInvocation[T] =
+    new ResultOfATypeInvocation(ct.runtimeClass.asInstanceOf[Class[T]])
 
   /**
    * This method enables the following syntax:
@@ -6644,8 +6646,8 @@ org.scalatest.exceptions.TestFailedException: org.scalatest.Matchers$ResultOfCol
    * ^
    * </pre>
    */
-  def an[T : ClassTag]: ResultOfAnTypeInvocation[T] =
-    new ResultOfAnTypeInvocation(classTag.runtimeClass.asInstanceOf[Class[T]])
+  def an[T](implicit ct: ClassTag[T]): ResultOfAnTypeInvocation[T] =
+    new ResultOfAnTypeInvocation(ct.runtimeClass.asInstanceOf[Class[T]])
 
   /**
    * This method enables the following syntax:
@@ -6655,8 +6657,8 @@ org.scalatest.exceptions.TestFailedException: org.scalatest.Matchers$ResultOfCol
    * ^
    * </pre>
    */
-  def the[T : ClassTag](implicit pos: source.Position): ResultOfTheTypeInvocation[T] =
-    new ResultOfTheTypeInvocation(classTag.runtimeClass.asInstanceOf[Class[T]], pos)
+  def the[T](implicit ct: ClassTag[T],  pos: source.Position): ResultOfTheTypeInvocation[T] =
+    new ResultOfTheTypeInvocation(ct.runtimeClass.asInstanceOf[Class[T]], pos)
 
   // This is where ShouldMatchers.scala started
 
@@ -7006,7 +7008,8 @@ org.scalatest.exceptions.TestFailedException: org.scalatest.Matchers$ResultOfCol
      *         ^
      * </pre>
      */
-    def shouldBe(aType: ResultOfATypeInvocation[_]): Assertion = macro TypeMatcherMacro.shouldBeATypeImpl
+    def shouldBe(aType: ResultOfATypeInvocation[_]): Assertion =
+      new Assertion {} // macro TypeMatcherMacro.shouldBeATypeImpl
 
     /**
      * This method enables syntax such as the following:
@@ -7016,7 +7019,8 @@ org.scalatest.exceptions.TestFailedException: org.scalatest.Matchers$ResultOfCol
      *         ^
      * </pre>
      */
-    def shouldBe(anType: ResultOfAnTypeInvocation[_]): Assertion = macro TypeMatcherMacro.shouldBeAnTypeImpl
+    def shouldBe(anType: ResultOfAnTypeInvocation[_]): Assertion =
+      new Assertion {} // macro TypeMatcherMacro.shouldBeAnTypeImpl
 
     /**
      * This method enables syntax such as the following:
@@ -7488,7 +7492,8 @@ org.scalatest.exceptions.TestFailedException: org.scalatest.Matchers$ResultOfCol
      *        ^
      * </pre>
      */
-    def should(compileWord: CompileWord)(implicit pos: source.Position): Assertion = macro CompileMacro.shouldCompileImpl
+    def should(compileWord: CompileWord)(implicit pos: source.Position): Assertion =
+      new Assertion {} // macro CompileMacro.shouldCompileImpl
 
     /**
      * This method enables syntax such as the following:
@@ -7498,7 +7503,8 @@ org.scalatest.exceptions.TestFailedException: org.scalatest.Matchers$ResultOfCol
      *        ^
      * </pre>
      */
-    def shouldNot(compileWord: CompileWord)(implicit pos: source.Position): Assertion = macro CompileMacro.shouldNotCompileImpl
+    def shouldNot(compileWord: CompileWord)(implicit pos: source.Position): Assertion =
+      new Assertion {} // macro CompileMacro.shouldNotCompileImpl
 
     /**
      * This method enables syntax such as the following:
@@ -7508,7 +7514,8 @@ org.scalatest.exceptions.TestFailedException: org.scalatest.Matchers$ResultOfCol
      *        ^
      * </pre>
      */
-    def shouldNot(typeCheckWord: TypeCheckWord)(implicit pos: source.Position): Assertion = macro CompileMacro.shouldNotTypeCheckImpl
+    def shouldNot(typeCheckWord: TypeCheckWord)(implicit pos: source.Position): Assertion =
+       new Assertion {} // macro CompileMacro.shouldNotTypeCheckImpl
 
 /*
     /**

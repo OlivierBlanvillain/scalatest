@@ -24,7 +24,7 @@ import java.lang.annotation.AnnotationFormatError
 import java.nio.charset.CoderMalfunctionError
 import javax.xml.parsers.FactoryConfigurationError
 import javax.xml.transform.TransformerFactoryConfigurationError
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 import org.scalatest.events.InfoProvided
 import org.scalatest.exceptions.DuplicateTestNameException
 import org.scalatest.exceptions.NotAllowedException

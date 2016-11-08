@@ -23,7 +23,7 @@ import Assertions.NormalResult
 import org.scalatest.exceptions.TestCanceledException
 import java.util.Date
 import org.scalactic.Prettifier
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext
 import org.scalatest.concurrent.ScalaFutures

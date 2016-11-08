@@ -17,7 +17,7 @@ package org.scalatest
 
 import SharedHelpers._
 import org.scalatest.events._
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 
 class FunSpecSuite extends FunSuite {
 

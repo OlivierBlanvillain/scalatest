@@ -170,7 +170,7 @@ private[scalatest] object SuiteDiscoveryHelper {
       None
   }
 
-  private val emptyClassArray = new Array[java.lang.Class[T] forSome { type T }](0)
+  private val emptyClassArray = new Array[java.lang.Class[_]](0)
 
   private[scalatest] def isAccessibleSuite(clazz: java.lang.Class[_]): Boolean = {
       try {
@@ -212,7 +212,7 @@ private[scalatest] object SuiteDiscoveryHelper {
   private[scalatest] def isRunnable(clazz: java.lang.Class[_]): Boolean = {
     val wrapWithAnnotation = clazz.getAnnotation(classOf[WrapWith])
     if (wrapWithAnnotation != null) {
-      val wrapperSuiteClazz = wrapWithAnnotation.value
+      val wrapperSuiteClazz: Class[_ <: Suite] = null // wrapWithAnnotation.value ANO
       val constructorList = wrapperSuiteClazz.getDeclaredConstructors()
       constructorList.exists { c =>
         val types = c.getParameterTypes

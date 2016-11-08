@@ -17,7 +17,7 @@ package org.scalatest
 
 import SharedHelpers._
 import org.scalatest.events._
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 import org.scalatest.exceptions.DuplicateTestNameException
 import org.scalatest.exceptions.TestFailedException
 import org.scalatest.exceptions.TestRegistrationClosedException

@@ -28,7 +28,7 @@ import org.scalactic.Prettifier
 import org.scalatest.time.{Seconds, Span}
 import scala.collection.immutable.TreeSet
 import scala.util.control.NonFatal
-import StackDepthExceptionHelper.getStackDepthFun
+import exceptions.StackDepthExceptionHelper.getStackDepthFun
 import Suite.checkChosenStyles
 import Suite.formatterForSuiteAborted
 import Suite.formatterForSuiteCompleted
@@ -531,7 +531,7 @@ import tools.SuiteDiscoveryHelper
  *
  * @author Bill Venners
  */
-trait Suite extends Assertions with Serializable { thisSuite =>
+class Suite extends Assertions with Serializable { thisSuite =>
 
   import Suite.InformerInParens
 
@@ -1417,7 +1417,7 @@ private[scalatest] object Suite {
   def checkForPublicNoArgConstructor(clazz: java.lang.Class[_]) = {
 
     try {
-      val constructor = clazz.getConstructor(new Array[java.lang.Class[T] forSome { type T }](0): _*)
+      val constructor = clazz.getConstructor(new Array[java.lang.Class[_]](0): _*)
 
       Modifier.isPublic(constructor.getModifiers)
     }
@@ -1616,7 +1616,7 @@ used for test events like succeeded/failed, etc.
     IndentedText(formattedText, decodedTestText, level)
   }
 
-  def getEscapedIndentedTextForTest(testText: String, level: Int, includeIcon: Boolean) = {
+  def getEscapedIndentedTextForTest(testText: String, level: Int, includeIcon: Boolean): IndentedText = {
     val decodedTestText = NameTransformer.decode(testText)
     val escapedTestText =
       if (decodedTestText.startsWith("test: "))

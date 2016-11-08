@@ -17,7 +17,7 @@ package org.scalatest.fixture
 
 import org.scalatest._
 import SharedHelpers._
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 import org.scalatest.events.InfoProvided
 import org.scalatest.events.{TestStarting, TestFailed}
 import org.scalatest.exceptions.DuplicateTestNameException

@@ -30,7 +30,7 @@ import java.awt.AWTError
 import java.nio.charset.CoderMalfunctionError
 import javax.xml.parsers.FactoryConfigurationError
 import javax.xml.transform.TransformerFactoryConfigurationError
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 import org.scalactic.Prettifier
 
 class FunSpecSpec extends org.scalatest.FreeSpec with GivenWhenThen {

@@ -18,7 +18,7 @@ package org.scalatest
 import SharedHelpers._
 import events._
 import java.util.concurrent.atomic.AtomicInteger
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 
 class TopLevelSpec extends FunSpec with OneInstancePerTest {
   import TopLevelSpec.sideEffectWasNotSeen

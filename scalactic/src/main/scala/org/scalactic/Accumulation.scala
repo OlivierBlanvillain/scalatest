@@ -63,40 +63,40 @@ trait Accumulation {
    * sections of the main documentation for class <code>Or</code>.
    * </p>
    */
-  implicit def convertOrToAccumulatable[G, ERR, EVERY[b] <: Every[b]](accumulatable: G Or EVERY[ERR]): Accumulatable[G, ERR, EVERY] =
-    new Accumulatable[G, ERR, EVERY] {
-      def zip[H, OTHERERR >: ERR, OTHEREVERY[c] <: Every[c]](other: H Or OTHEREVERY[OTHERERR]): (G, H) Or Every[OTHERERR] = {
-        accumulatable match {
-          case Good(g) =>
-            other match {
-              case Good(h) => Good((g, h))
-              case Bad(otherB) => Bad(otherB)
-            }
-          case Bad(myBad) =>
-            other match {
-              case Good(_) => Bad(myBad)
-              case Bad(otherB) => Bad(myBad ++ otherB)
-            }
-        }
-      }
-      def when[OTHERERR >: ERR](validations: (G => Validation[OTHERERR])*): G Or Every[OTHERERR] = {
-        accumulatable match {
-          case Good(g) =>
-            val results = validations flatMap (_(g) match { case Fail(x) => Seq(x); case Pass => Seq.empty})
-            results.length match {
-              case 0 => Good(g)
-              case 1 => Bad(One(results.head))
-              case _ =>
-                val first = results.head
-                val tail = results.tail
-                val second = tail.head
-                val rest = tail.tail
-                Bad(Many(first, second, rest: _*))
-            }
-          case Bad(myBad) => Bad(myBad)
-        }
-      }
-    }
+  implicit def convertOrToAccumulatable[G, ERR, EVERY[b] <: Every[b]](accumulatable: G Or EVERY[ERR]): Accumulatable[G, ERR, EVERY] = null
+    // new Accumulatable[G, ERR, EVERY] {
+    //   def zip[H, OTHERERR >: ERR, OTHEREVERY[c] <: Every[c]](other: H Or OTHEREVERY[OTHERERR]): (G, H) Or Every[OTHERERR] = {
+    //     accumulatable match {
+    //       case Good(g) =>
+    //         other match {
+    //           case Good(h) => Good((g, h))
+    //           case Bad(otherB) => Bad(otherB)
+    //         }
+    //       case Bad(myBad) =>
+    //         other match {
+    //           case Good(_) => Bad(myBad)
+    //           case Bad(otherB) => Bad(myBad ++ otherB)
+    //         }
+    //     }
+    //   }
+    //   def when[OTHERERR >: ERR](validations: (G => Validation[OTHERERR])*): G Or Every[OTHERERR] = {
+    //     accumulatable match {
+    //       case Good(g) =>
+    //         val results = validations flatMap (_(g) match { case Fail(x) => Seq(x); case Pass => Seq.empty})
+    //         results.length match {
+    //           case 0 => Good(g)
+    //           case 1 => Bad(One(results.head))
+    //           case _ =>
+    //             val first = results.head
+    //             val tail = results.tail
+    //             val second = tail.head
+    //             val rest = tail.tail
+    //             Bad(Many(first, second, rest: _*))
+    //         }
+    //       case Bad(myBad) => Bad(myBad)
+    //     }
+    //   }
+    // }
 
   /**
    * Implicitly converts a <em>covariant</em> <code>GenTraversableOnce</code> containing accumulating <code>Or</code>s to an instance of
@@ -112,20 +112,21 @@ trait Accumulation {
     new Combinable[G, ERR, TRAVONCE] {
 
       def combined: TRAVONCE[G] Or Every[ERR] = {
-        // So now I have an empty builder
-        val emptyTRAVONCEOfGBuilder: Builder[G, TRAVONCE[G]] = cbf(xs)
-        // So now I want to foldLeft across my TRAVONCE[G Or EVERY[ERR]], starting with an empty TRAVONCEOfGBuilder, and each step along the way, I'll
-        // += into the builder, what? Oh I get it. The result type of my foldLeft needs to be Builder[Seq[G]] Or Every[ERR]
-        val tempOr: Builder[G, TRAVONCE[G]] Or Every[ERR] =
-          xs.foldLeft((Good(emptyTRAVONCEOfGBuilder): Builder[G, TRAVONCE[G]] Or Every[ERR])) { (accumulator: Builder[G, TRAVONCE[G]] Or Every[ERR],  nextElem: G Or Every[ERR]) =>
-            (accumulator, nextElem) match {
-              case (Good(bldr), Good(ele)) => Good(bldr += ele)
-              case (Good(_), Bad(err)) => Bad(err)
-              case (Bad(errA), Bad(errB)) => Bad(errA ++ errB)
-              case (Bad(errA), Good(_)) => Bad(errA)
-            }
-          }
-        tempOr map (_.result)
+        ???
+        // // So now I have an empty builder
+        // val emptyTRAVONCEOfGBuilder: Builder[G, TRAVONCE[G]] = cbf(xs)
+        // // So now I want to foldLeft across my TRAVONCE[G Or EVERY[ERR]], starting with an empty TRAVONCEOfGBuilder, and each step along the way, I'll
+        // // += into the builder, what? Oh I get it. The result type of my foldLeft needs to be Builder[Seq[G]] Or Every[ERR]
+        // val tempOr: Builder[G, TRAVONCE[G]] Or Every[ERR] =
+        //   xs.foldLeft((Good(emptyTRAVONCEOfGBuilder): Builder[G, TRAVONCE[G]] Or Every[ERR])) { (accumulator: Builder[G, TRAVONCE[G]] Or Every[ERR],  nextElem: G Or Every[ERR]) =>
+        //     (accumulator, nextElem) match {
+        //       case (Good(bldr), Good(ele)) => Good(bldr += ele)
+        //       case (Good(_), Bad(err)) => Bad(err)
+        //       case (Bad(errA), Bad(errB)) => Bad(errA ++ errB)
+        //       case (Bad(errA), Good(_)) => Bad(errA)
+        //     }
+        //   }
+        // tempOr map (_.result)
       }
     }
 
@@ -155,26 +156,26 @@ trait Accumulation {
    * </p>
    */
   implicit def convertGenSetToCombinable[G, ERR, X, EVERY[b] <: Every[b], SET[e] <: GenSet[e]](xs: SET[X with (G Or EVERY[ERR])])(implicit cbf: CanBuildFrom[SET[X with (G Or EVERY[ERR])], G, SET[G]]): Combinable[G, ERR, SET] =
+    null
+    // new Combinable[G, ERR, SET] {
 
-    new Combinable[G, ERR, SET] {
-
-      def combined: SET[G] Or Every[ERR] = {
-        // So now I have an empty builder
-        val emptySETOfGBuilder: Builder[G, SET[G]] = cbf(xs)
-        // So now I want to foldLeft across my SET[G Or EVERY[ERR]], starting with an empty SETOfGBuilder, and each step along the way, I'll
-        // += into the builder, what? Oh I get it. The result type of my foldLeft needs to be Builder[Seq[G]] Or Every[ERR]
-        val tempOr: Builder[G, SET[G]] Or Every[ERR] =
-          xs.foldLeft((Good(emptySETOfGBuilder): Builder[G, SET[G]] Or Every[ERR])) { (accumulator: Builder[G, SET[G]] Or Every[ERR],  nextElem: G Or Every[ERR]) =>
-            (accumulator, nextElem) match {
-              case (Good(bldr), Good(ele)) => Good(bldr += ele)
-              case (Good(_), Bad(err)) => Bad(err)
-              case (Bad(errA), Bad(errB)) => Bad(errA ++ errB)
-              case (Bad(errA), Good(_)) => Bad(errA)
-            }
-          }
-        tempOr map (_.result)
-      }
-    }
+    //   def combined: SET[G] Or Every[ERR] = {
+    //     // So now I have an empty builder
+    //     val emptySETOfGBuilder: Builder[G, SET[G]] = cbf(xs)
+    //     // So now I want to foldLeft across my SET[G Or EVERY[ERR]], starting with an empty SETOfGBuilder, and each step along the way, I'll
+    //     // += into the builder, what? Oh I get it. The result type of my foldLeft needs to be Builder[Seq[G]] Or Every[ERR]
+    //     val tempOr: Builder[G, SET[G]] Or Every[ERR] =
+    //       xs.foldLeft((Good(emptySETOfGBuilder): Builder[G, SET[G]] Or Every[ERR])) { (accumulator: Builder[G, SET[G]] Or Every[ERR],  nextElem: G Or Every[ERR]) =>
+    //         (accumulator, nextElem) match {
+    //           case (Good(bldr), Good(ele)) => Good(bldr += ele)
+    //           case (Good(_), Bad(err)) => Bad(err)
+    //           case (Bad(errA), Bad(errB)) => Bad(errA ++ errB)
+    //           case (Bad(errA), Good(_)) => Bad(errA)
+    //         }
+    //       }
+    //     tempOr map (_.result)
+    //   }
+    // }
 
   /**
    * Implicitly converts a <code>Set</code> containing accumulating <code>Or</code>s whose <code>Good</code> type is inferred as <code>Nothing</code> to an
@@ -198,26 +199,26 @@ trait Accumulation {
    * </p>
    */
   implicit def convertEveryToCombinable[G, ERR](oneToMany: Every[G Or Every[ERR]]): Combinable[G, ERR, Every] =
+    null
+    // new Combinable[G, ERR, Every] {
 
-    new Combinable[G, ERR, Every] {
-
-      def combined: Every[G] Or Every[ERR] = {
-        val vec = oneToMany.toVector
-        val z: Every[G] Or Every[ERR] =
-          vec.head match {
-            case Good(g) => Good(One(g))
-            case Bad(err) => Bad(err)
-          }
-        vec.tail.foldLeft(z) { (accumulator: Every[G] Or Every[ERR],  nextElem: G Or Every[ERR]) =>
-          (accumulator, nextElem) match {
-            case (Good(everyG), Good(g)) => Good(everyG :+ g)
-            case (Good(_), Bad(err)) => Bad(err)
-            case (Bad(errA), Bad(errB)) => Bad(errA ++ errB)
-            case (Bad(errA), Good(_)) => Bad(errA)
-          }
-        }
-      }
-    }
+    //   def combined: Every[G] Or Every[ERR] = {
+    //     val vec = oneToMany.toVector
+    //     val z: Every[G] Or Every[ERR] =
+    //       vec.head match {
+    //         case Good(g) => Good(One(g))
+    //         case Bad(err) => Bad(err)
+    //       }
+    //     vec.tail.foldLeft(z) { (accumulator: Every[G] Or Every[ERR],  nextElem: G Or Every[ERR]) =>
+    //       (accumulator, nextElem) match {
+    //         case (Good(everyG), Good(g)) => Good(everyG :+ g)
+    //         case (Good(_), Bad(err)) => Bad(err)
+    //         case (Bad(errA), Bad(errB)) => Bad(errA ++ errB)
+    //         case (Bad(errA), Good(_)) => Bad(errA)
+    //       }
+    //     }
+    //   }
+    // }
 
   /**
    * Implicitly converts an <code>Option</code> containing accumulating <code>Or</code>s to an instance of
@@ -228,14 +229,15 @@ trait Accumulation {
    * </p>
    */
   implicit def convertOptionToCombinable[G, ERR](option: Option[G Or Every[ERR]]): Combinable[G, ERR, Option] =
-    new Combinable[G, ERR, Option] {
-      def combined: Option[G] Or Every[ERR] =
-        option match {
-          case Some(Good(g)) => Good(Some(g))
-          case Some(Bad(err)) => Bad(err)
-          case None => Good(None)
-        }
-    }
+    null
+    // new Combinable[G, ERR, Option] {
+    //   def combined: Option[G] Or Every[ERR] =
+    //     option match {
+    //       case Some(Good(g)) => Good(Some(g))
+    //       case Some(Bad(err)) => Bad(err)
+    //       case None => Good(None)
+    //     }
+    // }
 
   /**
    * Implicitly converts a <code>GenTraversableOnce</code> to an instance of <code>Validatable</code>, which
@@ -247,27 +249,27 @@ trait Accumulation {
    * </p>
    */
   implicit def convertGenTraversableOnceToValidatable[G, TRAVONCE[e] <: GenTraversableOnce[e]](xs: TRAVONCE[G]): TravValidatable[G, TRAVONCE] =
+    null
+    // new TravValidatable[G, TRAVONCE] {
 
-    new TravValidatable[G, TRAVONCE] {
+    //   def validatedBy[H, ERR, EVERY[e] <: Every[e]](fn: G => H Or EVERY[ERR])(implicit cbf: CanBuildFrom[TRAVONCE[G], H, TRAVONCE[H]]): TRAVONCE[H] Or Every[ERR] = {
 
-      def validatedBy[H, ERR, EVERY[e] <: Every[e]](fn: G => H Or EVERY[ERR])(implicit cbf: CanBuildFrom[TRAVONCE[G], H, TRAVONCE[H]]): TRAVONCE[H] Or Every[ERR] = {
-
-        // So now I have an empty builder
-        val emptyTRAVONCEOfGBuilder: Builder[H, TRAVONCE[H]] = cbf(xs)
-        // So now I want to foldLeft across my TRAVONCE[G Or EVERY[ERR]], starting with an empty TRAVONCEOfGBuilder, and each step along the way, I'll
-        // += into the builder, what? Oh I get it. The result type of my foldLeft needs to be Builder[Seq[G]] Or Every[ERR]
-        val tempOr: Builder[H, TRAVONCE[H]] Or Every[ERR] =
-          xs.foldLeft((Good(emptyTRAVONCEOfGBuilder): Builder[H, TRAVONCE[H]] Or Every[ERR])) { (accumulator: Builder[H, TRAVONCE[H]] Or Every[ERR],  nextElem: G) =>
-            (accumulator, fn(nextElem)) match {
-              case (Good(bldr), Good(ele)) => Good(bldr += ele)
-              case (Good(bldr), Bad(err)) => Bad(err)
-              case (Bad(errA), Bad(errB)) => Bad(errA ++ errB)
-              case (Bad(errA), Good(ele)) => Bad(errA)
-            }
-          }
-        tempOr map (_.result)
-      }
-    }
+    //     // So now I have an empty builder
+    //     val emptyTRAVONCEOfGBuilder: Builder[H, TRAVONCE[H]] = cbf(xs)
+    //     // So now I want to foldLeft across my TRAVONCE[G Or EVERY[ERR]], starting with an empty TRAVONCEOfGBuilder, and each step along the way, I'll
+    //     // += into the builder, what? Oh I get it. The result type of my foldLeft needs to be Builder[Seq[G]] Or Every[ERR]
+    //     val tempOr: Builder[H, TRAVONCE[H]] Or Every[ERR] =
+    //       xs.foldLeft((Good(emptyTRAVONCEOfGBuilder): Builder[H, TRAVONCE[H]] Or Every[ERR])) { (accumulator: Builder[H, TRAVONCE[H]] Or Every[ERR],  nextElem: G) =>
+    //         (accumulator, fn(nextElem)) match {
+    //           case (Good(bldr), Good(ele)) => Good(bldr += ele)
+    //           case (Good(bldr), Bad(err)) => Bad(err)
+    //           case (Bad(errA), Bad(errB)) => Bad(errA ++ errB)
+    //           case (Bad(errA), Good(ele)) => Bad(errA)
+    //         }
+    //       }
+    //     tempOr map (_.result)
+    //   }
+    // }
 
   /**
    * Implicitly converts an <code>Every</code> to an instance of <code>Validatable</code>, which
@@ -279,24 +281,25 @@ trait Accumulation {
    * </p>
    */
   implicit def convertEveryToValidatable[G](oneToMany: Every[G]): Validatable[G, Every] =
-    new Validatable[G, Every] {
-      def validatedBy[H, ERR, EVERY[e] <: Every[e]](fn: G => H Or EVERY[ERR]): Every[H] Or Every[ERR] = {
-        val vec = oneToMany.toVector
-        val z: Every[H] Or Every[ERR] =
-          fn(vec.head) match {
-            case Good(h) => Good(One(h))
-            case Bad(err) => Bad(err)
-          }
-        vec.tail.foldLeft(z) { (accumulator: Every[H] Or Every[ERR],  nextElem: G) =>
-          (accumulator, fn(nextElem)) match {
-            case (Good(everyG), Good(h)) => Good(everyG :+ h)
-            case (Good(_), Bad(err)) => Bad(err)
-            case (Bad(errA), Bad(errB)) => Bad(errA ++ errB)
-            case (Bad(errA), Good(_)) => Bad(errA)
-          }
-        }
-      }
-    }
+    null
+    // new Validatable[G, Every] {
+    //   def validatedBy[H, ERR, EVERY[e] <: Every[e]](fn: G => H Or EVERY[ERR]): Every[H] Or Every[ERR] = {
+    //     val vec = oneToMany.toVector
+    //     val z: Every[H] Or Every[ERR] =
+    //       fn(vec.head) match {
+    //         case Good(h) => Good(One(h))
+    //         case Bad(err) => Bad(err)
+    //       }
+    //     vec.tail.foldLeft(z) { (accumulator: Every[H] Or Every[ERR],  nextElem: G) =>
+    //       (accumulator, fn(nextElem)) match {
+    //         case (Good(everyG), Good(h)) => Good(everyG :+ h)
+    //         case (Good(_), Bad(err)) => Bad(err)
+    //         case (Bad(errA), Bad(errB)) => Bad(errA ++ errB)
+    //         case (Bad(errA), Good(_)) => Bad(errA)
+    //       }
+    //     }
+    //   }
+    // }
 
   /**
    * Implicitly converts an <code>Option</code> to an instance of <code>Validatable</code>, which
@@ -308,15 +311,16 @@ trait Accumulation {
    * </p>
    */
   implicit def convertOptionToValidatable[G](option: Option[G]): Validatable[G, Option] =
-    new Validatable[G, Option] {
-      def validatedBy[H, ERR, EVERY[e] <: Every[e]](fn: G => H Or EVERY[ERR]): Option[H] Or Every[ERR] = {
-        option.map(fn) match {
-          case Some(Good(h)) => Good(Some(h))
-          case Some(Bad(err)) => Bad(err)
-          case None => Good(None)
-        }
-      }
-    }
+    null
+    // new Validatable[G, Option] {
+    //   def validatedBy[H, ERR, EVERY[e] <: Every[e]](fn: G => H Or EVERY[ERR]): Option[H] Or Every[ERR] = {
+    //     option.map(fn) match {
+    //       case Some(Good(h)) => Good(Some(h))
+    //       case Some(Bad(err)) => Bad(err)
+    //       case None => Good(None)
+    //     }
+    //   }
+    // }
 
   /**
    * Given a <code>Good</code> accumulating <code>Or</code>, apply it to the given function and return the result, wrapped in a <code>Good</code>;
@@ -365,18 +369,19 @@ trait Accumulation {
     fn: A => B => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (B => RESULT) Or Every[ERR] = withGood[A, ERR, B => RESULT](a)(fn)
-    b match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // b match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
   /**
@@ -407,18 +412,19 @@ trait Accumulation {
     fn: A => B => C => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (C => RESULT) Or Every[ERR] = withGoodCurried[A, B, ERR, C => RESULT](a, b)(fn)
-    c match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // c match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
   /**
@@ -451,18 +457,19 @@ trait Accumulation {
     fn: A => B => C => D => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (D => RESULT) Or Every[ERR] = withGoodCurried[A, B, C, ERR, D => RESULT](a, b, c)(fn)
-    d match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // d match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
   /**
@@ -497,18 +504,19 @@ trait Accumulation {
     fn: A => B => C => D => E => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (E => RESULT) Or Every[ERR] = withGoodCurried[A, B, C, D, ERR, E => RESULT](a, b, c, d)(fn)
-    e match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // e match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
 
@@ -546,18 +554,19 @@ trait Accumulation {
     fn: A => B => C => D => E => F => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (F => RESULT) Or Every[ERR] = withGoodCurried[A, B, C, D, E, ERR, F => RESULT](a, b, c, d, e)(fn)
-    f match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // f match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
 
@@ -597,18 +606,19 @@ trait Accumulation {
     fn: A => B => C => D => E => F => G => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (G => RESULT) Or Every[ERR] = withGoodCurried[A, B, C, D, E, F, ERR, G => RESULT](a, b, c, d, e, f)(fn)
-    g match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // g match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
 
@@ -650,18 +660,19 @@ trait Accumulation {
     fn: A => B => C => D => E => F => G => H => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (H => RESULT) Or Every[ERR] = withGoodCurried[A, B, C, D, E, F, G, ERR, H => RESULT](a, b, c, d, e, f, g)(fn)
-    h match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // h match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
 
@@ -705,18 +716,19 @@ trait Accumulation {
     fn: A => B => C => D => E => F => G => H => I => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (I => RESULT) Or Every[ERR] = withGoodCurried[A, B, C, D, E, F, G, H, ERR, I => RESULT](a, b, c, d, e, f, g, h)(fn)
-    i match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // i match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
 
@@ -762,18 +774,19 @@ trait Accumulation {
     fn: A => B => C => D => E => F => G => H => I => J => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (J => RESULT) Or Every[ERR] = withGoodCurried[A, B, C, D, E, F, G, H, I, ERR, J => RESULT](a, b, c, d, e, f, g, h, i)(fn)
-    j match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // j match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
 
@@ -821,18 +834,19 @@ trait Accumulation {
     fn: A => B => C => D => E => F => G => H => I => J => K => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (K => RESULT) Or Every[ERR] = withGoodCurried[A, B, C, D, E, F, G, H, I, J, ERR, K => RESULT](a, b, c, d, e, f, g, h, i, j)(fn)
-    k match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // k match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
 
@@ -882,18 +896,19 @@ trait Accumulation {
     fn: A => B => C => D => E => F => G => H => I => J => K => L => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (L => RESULT) Or Every[ERR] = withGoodCurried[A, B, C, D, E, F, G, H, I, J, K, ERR, L => RESULT](a, b, c, d, e, f, g, h, i, j, k)(fn)
-    l match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // l match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
 
@@ -945,18 +960,19 @@ trait Accumulation {
     fn: A => B => C => D => E => F => G => H => I => J => K => L => M => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (M => RESULT) Or Every[ERR] = withGoodCurried[A, B, C, D, E, F, G, H, I, J, K, L, ERR, M => RESULT](a, b, c, d, e, f, g, h, i, j, k, l)(fn)
-    m match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // m match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
 
@@ -1010,18 +1026,19 @@ trait Accumulation {
     fn: A => B => C => D => E => F => G => H => I => J => K => L => M => N => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (N => RESULT) Or Every[ERR] = withGoodCurried[A, B, C, D, E, F, G, H, I, J, K, L, M, ERR, N => RESULT](a, b, c, d, e, f, g, h, i, j, k, l, m)(fn)
-    n match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // n match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
 
@@ -1077,18 +1094,19 @@ trait Accumulation {
     fn: A => B => C => D => E => F => G => H => I => J => K => L => M => N => O => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (O => RESULT) Or Every[ERR] = withGoodCurried[A, B, C, D, E, F, G, H, I, J, K, L, M, N, ERR, O => RESULT](a, b, c, d, e, f, g, h, i, j, k, l, m, n)(fn)
-    o match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // o match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
 
@@ -1146,18 +1164,19 @@ trait Accumulation {
     fn: A => B => C => D => E => F => G => H => I => J => K => L => M => N => O => P => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (P => RESULT) Or Every[ERR] = withGoodCurried[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, ERR, P => RESULT](a, b, c, d, e, f, g, h, i, j, k, l, m, n, o)(fn)
-    p match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // p match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
 
@@ -1217,18 +1236,19 @@ trait Accumulation {
     fn: A => B => C => D => E => F => G => H => I => J => K => L => M => N => O => P => Q => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (Q => RESULT) Or Every[ERR] = withGoodCurried[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, ERR, Q => RESULT](a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p)(fn)
-    q match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // q match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
 
@@ -1290,18 +1310,19 @@ trait Accumulation {
     fn: A => B => C => D => E => F => G => H => I => J => K => L => M => N => O => P => Q => R => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (R => RESULT) Or Every[ERR] = withGoodCurried[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, ERR, R => RESULT](a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q)(fn)
-    r match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // r match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
 
@@ -1365,18 +1386,19 @@ trait Accumulation {
     fn: A => B => C => D => E => F => G => H => I => J => K => L => M => N => O => P => Q => R => S => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (S => RESULT) Or Every[ERR] = withGoodCurried[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, ERR, S => RESULT](a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r)(fn)
-    s match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // s match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
 
@@ -1442,18 +1464,19 @@ trait Accumulation {
     fn: A => B => C => D => E => F => G => H => I => J => K => L => M => N => O => P => Q => R => S => T => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (T => RESULT) Or Every[ERR] = withGoodCurried[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, ERR, T => RESULT](a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s)(fn)
-    t match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // t match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
 
@@ -1521,18 +1544,19 @@ trait Accumulation {
     fn: A => B => C => D => E => F => G => H => I => J => K => L => M => N => O => P => Q => R => S => T => U => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (U => RESULT) Or Every[ERR] = withGoodCurried[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, ERR, U => RESULT](a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t)(fn)
-    u match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // u match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 
 
@@ -1602,18 +1626,19 @@ trait Accumulation {
     fn: A => B => C => D => E => F => G => H => I => J => K => L => M => N => O => P => Q => R => S => T => U => V => RESULT
   ): RESULT Or Every[ERR] = {
     val funOrError: (V => RESULT) Or Every[ERR] = withGoodCurried[A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, ERR, V => RESULT](a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u)(fn)
-    v match {
-      case Good(valid) =>
-        funOrError match {
-          case Good(validFun) => Good(validFun(valid))
-          case Bad(every) => Bad(every)
-        }
-      case Bad(every) =>
-        funOrError match {
-          case Good(_) => Bad(every)
-          case Bad(funEvery) => Bad(funEvery ++ every)
-        }
-    }
+    null
+    // v match {
+    //   case Good(valid) =>
+    //     funOrError match {
+    //       case Good(validFun) => Good(validFun(valid))
+    //       case Bad(every) => Bad(every)
+    //     }
+    //   case Bad(every) =>
+    //     funOrError match {
+    //       case Good(_) => Bad(every)
+    //       case Bad(funEvery) => Bad(funEvery ++ every)
+    //     }
+    // }
   }
 }
 

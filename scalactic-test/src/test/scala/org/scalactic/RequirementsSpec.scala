@@ -18,7 +18,7 @@ package org.scalactic
 import org.scalatest._
 import java.util.Date
 import Prettifier.lineSeparator
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 
 class RequirementsSpec extends FunSpec with Requirements with OptionValues {
 

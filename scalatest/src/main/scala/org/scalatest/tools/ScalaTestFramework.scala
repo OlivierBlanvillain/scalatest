@@ -201,7 +201,7 @@ class ScalaTestFramework extends SbtFramework {
               slowpokeDetectionPeriod.getAndSet(60000L)
           }
 
-          Runner.spanScaleFactor = parseDoubleArgument(spanScaleFactors, "-F", 1.0)
+          org.scalatest.tools.Runner.spanScaleFactor = parseDoubleArgument(spanScaleFactors, "-F", 1.0)
 
           val fullReporterConfigurations = parseReporterArgsIntoConfigurations(reporterArgs)
           val sbtNoFormat = java.lang.Boolean.getBoolean("sbt.log.noformat")
@@ -253,7 +253,7 @@ class ScalaTestFramework extends SbtFramework {
           else
             Vector(reporter.get.get)
 
-        val dispatchReporter = new SbtDispatchReporter(reporters)
+        val dispatchReporter = ??? // TODO  new SbtDispatchReporter(reporters)
 
         (dispatchReporter, filter.get.get, configMap.get.get, membersOnly.get.get, wildcard.get.get)
       }
@@ -399,7 +399,7 @@ Tags to include and exclude: -n "CheckinTests FunctionalTests" -l "SlowTests Net
             if (wrapWithAnnotation == null)
               suiteClass.newInstance.asInstanceOf[Suite]
             else {
-              val suiteClazz = wrapWithAnnotation.value
+              val suiteClazz: Class[_ <: Suite] = null // wrapWithAnnotation.value ANO
               val constructorList = suiteClazz.getDeclaredConstructors()
               val constructor = constructorList.find { c =>
                   val types = c.getParameterTypes
@@ -457,7 +457,7 @@ Tags to include and exclude: -n "CheckinTests FunctionalTests" -l "SlowTests Net
       }
     }
 
-    private val emptyClassArray = new Array[java.lang.Class[T] forSome {type T}](0)
+    private val emptyClassArray = new Array[java.lang.Class[_]](0)
 
     private class SbtReporter(eventHandler: EventHandler, report: Option[Reporter]) extends Reporter {
 

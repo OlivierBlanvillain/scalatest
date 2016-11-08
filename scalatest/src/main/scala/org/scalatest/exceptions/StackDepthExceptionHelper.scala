@@ -2,7 +2,7 @@ package org.scalatest.exceptions
 
 import org.scalactic._
 import Requirements.requireNonNull
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 
 /*
 For check methods in Checkers, passed fileName will be "Checkers.scala" and
@@ -99,7 +99,7 @@ Conductor from conduct method: Stack depth should be 3 or 4. Both of which are t
 [scalatest] 	at org.scalatest.FunSuite$class.runTest(FunSuite.scala:1028)
 [scalatest] 	at org.scalatest.concurrent.ConductorSuite.runTest(ConductorSuite.scala:23)
 */
-private[scalatest] object StackDepthExceptionHelper extends Serializable {
+object StackDepthExceptionHelper extends Serializable {
 
   def getStackDepth(stackTrace: Array[StackTraceElement], fileName: String, methodName: String, adjustment: Int = 0): Int = {
     val stackTraceList = stackTrace.toList

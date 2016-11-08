@@ -4561,7 +4561,7 @@ trait HtmlUnit extends WebBrowser with Driver with ScreenshotCapturer {
    */
   implicit val webDriver = new HtmlUnitDriver()
 
-  webDriver.setJavascriptEnabled(true)
+  // webDriver.setJavascriptEnabled(true) MM
 
   /**
    * Captures a screenshot and saves it as a file in the specified directory.

@@ -1421,7 +1421,7 @@ object Runner {
       if (wrapWithAnnotation == null)
         clazz.newInstance.asInstanceOf[Suite]
       else {
-        val suiteClazz = wrapWithAnnotation.value
+        val suiteClazz: Class[_ <: Suite] = null // wrapWithAnnotation.value ANO
         val constructorList = suiteClazz.getDeclaredConstructors()
         val constructor = constructorList.find { c =>
           val types = c.getParameterTypes

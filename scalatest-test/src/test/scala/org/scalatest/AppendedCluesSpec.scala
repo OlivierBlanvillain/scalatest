@@ -25,7 +25,7 @@ import time.{Span, Second}
 import SharedHelpers.EventRecordingReporter
 import AppendedClues._
 import TableDrivenPropertyChecks._
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 import org.scalactic.source
 import org.scalatest.exceptions.StackDepthException
 

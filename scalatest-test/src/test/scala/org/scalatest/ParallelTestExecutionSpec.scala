@@ -82,7 +82,7 @@ class ParallelTestExecutionSpec extends FunSpec with EventHelpers {
 
     // SKIP-SCALATESTJS-START
     class ControlledOrderConcurrentDistributor(poolSize: Int) extends Distributor {
-      private val futureQueue = new java.util.concurrent.LinkedBlockingQueue[Future[T] forSome { type T }]
+      private val futureQueue = new java.util.concurrent.LinkedBlockingQueue[Future[_]]
 
       val buf = ListBuffer.empty[SuiteRunner]
       val execSvc: ExecutorService = Executors.newFixedThreadPool(2)

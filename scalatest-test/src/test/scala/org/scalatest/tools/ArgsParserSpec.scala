@@ -18,7 +18,7 @@ package org.scalatest.tools
 import java.util.regex.Pattern
 import org.scalatest._
 import java.io.File
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 
 class ArgsParserSpec extends FunSpec {
 

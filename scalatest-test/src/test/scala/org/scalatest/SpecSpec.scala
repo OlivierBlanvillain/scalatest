@@ -26,7 +26,7 @@ import java.lang.annotation.AnnotationFormatError
 import java.nio.charset.CoderMalfunctionError
 import javax.xml.parsers.FactoryConfigurationError
 import javax.xml.transform.TransformerFactoryConfigurationError
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 import org.scalatest.exceptions.NotAllowedException
 import org.scalatest.exceptions.TestCanceledException
 import scala.reflect.NameTransformer.encode

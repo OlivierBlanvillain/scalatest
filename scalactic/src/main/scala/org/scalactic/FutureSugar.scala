@@ -17,13 +17,13 @@ package org.scalactic
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext
-import exceptions.ValidationFailedException
+import scalacticexceptions.ValidationFailedException
 
 /**
  * Trait providing an implicit class that adds a <code>validating</code> method to
  * <code>Future</code>, which takes one or more validation functions and returns either the
  * same <code>Future</code> if either the <code>Future</code> had already failed or its value
- * passes all the functions, or [[org.scalactic.exceptions.ValidationFailedException `ValidationFailedException`]] containing an error message
+ * passes all the functions, or [[org.scalactic.scalacticexceptions.ValidationFailedException `ValidationFailedException`]] containing an error message
  * describing the first validation that failed.
  *
  * <p>
@@ -93,7 +93,7 @@ import exceptions.ValidationFailedException
  * round42: scala.concurrent.Future[Int] = scala.concurrent.impl.Promise$DefaultPromise@b5175d
  *
  * scala&gt; round42.value
- * res3: Option[scala.util.Try[Int]] = Some(Failure(org.scalactic.exceptions.ValidationFailedException: 42 was not a round number))
+ * res3: Option[scala.util.Try[Int]] = Some(Failure(org.scalactic.scalacticexceptions.ValidationFailedException: 42 was not a round number))
  * </pre>
  *
  * <p>
@@ -136,7 +136,7 @@ import exceptions.ValidationFailedException
  * futShort: scala.concurrent.Future[Int] = scala.concurrent.impl.Promise$DefaultPromise@30bb943e
  *
  * scala&gt; futShort.value
- * res11: Option[scala.util.Try[Int]] = Some(Failure(org.scalactic.exceptions.ValidationFailedException: 100 was not divisible by 3))
+ * res11: Option[scala.util.Try[Int]] = Some(Failure(org.scalactic.scalacticexceptions.ValidationFailedException: 100 was not divisible by 3))
  * </pre>
  */
 trait FutureSugar {

@@ -25,7 +25,7 @@ import TableDrivenPropertyChecks._
 import org.scalatest.exceptions.ModifiableMessage
 import org.scalatest.exceptions.StackDepth
 import SharedHelpers.EventRecordingReporter
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 import org.scalactic.source
 import org.scalatest.exceptions.StackDepthException
 import org.scalatest.exceptions.TestFailedException

@@ -16,7 +16,7 @@
 package org.scalatest
 
 import org.scalactic.Requirements._
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 
 /**
  * A <code>Suite</code> class that takes zero to many <code>Suite</code>s in its constructor,

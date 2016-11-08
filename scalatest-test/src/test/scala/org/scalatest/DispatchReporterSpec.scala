@@ -18,7 +18,7 @@ package org.scalatest
 import java.io.PrintStream
 import java.io.ByteArrayOutputStream
 import org.scalatest.events._
-import org.scalactic.exceptions.NullArgumentException
+import org.scalactic.scalacticexceptions.NullArgumentException
 import SharedHelpers._
 import concurrent.Eventually._
 import Matchers._

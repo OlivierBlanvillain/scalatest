@@ -855,7 +855,7 @@ $endif$
      * </pre>
      */
     def equal(any: Any): MatcherFactory$arityPlusOne$[SC, $commaSeparatedTCNs$, Equality] =
-      thisMatcherFactory.and(MatcherWords.not.apply(MatcherWords.equal(any)))
+      thisMatcherFactory.and(MatcherWords.not.apply[SC, Equality](MatcherWords.equal(any)))
 
     /**
      * This method enables the following syntax, for the "primitive" numeric types:
@@ -914,7 +914,7 @@ $endif$
      * </pre>
      */
     def have(resultOfLengthWordApplication: ResultOfLengthWordApplication): MatcherFactory$arityPlusOne$[SC, $commaSeparatedTCNs$, Length] =
-      thisMatcherFactory.and(MatcherWords.not.apply(MatcherWords.have.length(resultOfLengthWordApplication.expectedLength)))
+      thisMatcherFactory.and(MatcherWords.not.apply[SC, Length](MatcherWords.have.length(resultOfLengthWordApplication.expectedLength)))
 
     /**
      * This method enables the following syntax given a <code>MatcherFactory$arity$</code>:
@@ -925,7 +925,7 @@ $endif$
      * </pre>
      */
     def have(resultOfSizeWordApplication: ResultOfSizeWordApplication): MatcherFactory$arityPlusOne$[SC, $commaSeparatedTCNs$, Size] =
-      thisMatcherFactory.and(MatcherWords.not.apply(MatcherWords.have.size(resultOfSizeWordApplication.expectedSize)))
+      thisMatcherFactory.and(MatcherWords.not.apply[SC, Size](MatcherWords.have.size(resultOfSizeWordApplication.expectedSize)))
 
     /**
      * This method enables the following syntax given a <code>MatcherFactory$arity$</code>:
@@ -936,7 +936,7 @@ $endif$
      * </pre>
      */
     def have(resultOfMessageWordApplication: ResultOfMessageWordApplication): MatcherFactory$arityPlusOne$[SC, $commaSeparatedTCNs$, Messaging] =
-      thisMatcherFactory.and(MatcherWords.not.apply(MatcherWords.have.message(resultOfMessageWordApplication.expectedMessage)))
+      thisMatcherFactory.and(MatcherWords.not.apply[SC, Messaging](MatcherWords.have.message(resultOfMessageWordApplication.expectedMessage)))
 
     /**
      * This method enables the following syntax given a <code>MatcherFactory$arity$</code>:
@@ -1114,7 +1114,7 @@ $endif$
      */
     def be[U](resultOfAnWordApplication: ResultOfAnWordToAnMatcherApplication[U]): MatcherFactory$arity$[SC with U, $commaSeparatedTCNs$] = thisMatcherFactory.and(MatcherWords.not.be(resultOfAnWordApplication))
 
-    import scala.language.experimental.macros
+    // import scala.language.experimental.macros
 
     /**
      * This method enables the following syntax given a <code>MatcherFactory$arity$</code>:
@@ -1124,7 +1124,8 @@ $endif$
      *                         ^
      * </pre>
      */
-    def be(aType: ResultOfATypeInvocation[_]): MatcherFactory$arity$[SC with AnyRef, $commaSeparatedTCNs$] = macro MatcherFactory$arity$.andNotATypeMatcherFactory$arity$[SC, $commaSeparatedTCNs$]
+    def be(aType: ResultOfATypeInvocation[_]): MatcherFactory$arity$[SC with AnyRef, $commaSeparatedTCNs$] =
+      ??? // macro MatcherFactory$arity$.andNotATypeMatcherFactory$arity$[SC, $commaSeparatedTCNs$]
 
     /**
      * This method enables the following syntax given a <code>MatcherFactory$arity$</code>:
@@ -1134,7 +1135,8 @@ $endif$
      *                         ^
      * </pre>
      */
-    def be(anType: ResultOfAnTypeInvocation[_]): MatcherFactory$arity$[SC with AnyRef, $commaSeparatedTCNs$] = macro MatcherFactory$arity$.andNotAnTypeMatcherFactory$arity$[SC, $commaSeparatedTCNs$]
+    def be(anType: ResultOfAnTypeInvocation[_]): MatcherFactory$arity$[SC with AnyRef, $commaSeparatedTCNs$] =
+      ??? // macro MatcherFactory$arity$.andNotAnTypeMatcherFactory$arity$[SC, $commaSeparatedTCNs$]
 
     /**
      * This method enables the following syntax given a <code>MatcherFactory$arity$</code>:
@@ -1516,7 +1518,11 @@ $endif$
      *                         ^
      * </pre>
      */
-     def matchPattern(right: PartialFunction[Any, _]) = macro MatchPatternMacro.andNotMatchPatternMatcher
+     def matchPattern(right: PartialFunction[Any, _]): Matcher[Any] =
+      Matcher { a =>
+        MatchResult(right.isDefinedAt(a), "MM Failure", "MM NegatedFailure")
+      }
+      // macro MatchPatternMacro.andNotMatchPatternMatcher
   }
                     """
 
@@ -2149,7 +2155,7 @@ $endif$
      * </pre>
      */
     def equal(any: Any): MatcherFactory$arityPlusOne$[SC, $commaSeparatedTCNs$, Equality] =
-      thisMatcherFactory.or(MatcherWords.not.apply(MatcherWords.equal(any)))
+      thisMatcherFactory.or(MatcherWords.not.apply[SC, Equality](MatcherWords.equal(any)))
 
     /**
      * This method enables the following syntax for the "primitive" numeric types:
@@ -2208,7 +2214,7 @@ $endif$
      * </pre>
      */
     def have(resultOfLengthWordApplication: ResultOfLengthWordApplication): MatcherFactory$arityPlusOne$[SC, $commaSeparatedTCNs$, Length] =
-      thisMatcherFactory.or(MatcherWords.not.apply(MatcherWords.have.length(resultOfLengthWordApplication.expectedLength)))
+      thisMatcherFactory.or(MatcherWords.not.apply[SC, Length](MatcherWords.have.length(resultOfLengthWordApplication.expectedLength)))
 
     /**
      * This method enables the following syntax given a <code>MatcherFactory$arity$</code>:
@@ -2219,7 +2225,7 @@ $endif$
      * </pre>
      */
     def have(resultOfSizeWordApplication: ResultOfSizeWordApplication): MatcherFactory$arityPlusOne$[SC, $commaSeparatedTCNs$, Size] =
-      thisMatcherFactory.or(MatcherWords.not.apply(MatcherWords.have.size(resultOfSizeWordApplication.expectedSize)))
+      thisMatcherFactory.or(MatcherWords.not.apply[SC, Size](MatcherWords.have.size(resultOfSizeWordApplication.expectedSize)))
 
     /**
      * This method enables the following syntax given a <code>MatcherFactory$arity$</code>:
@@ -2230,7 +2236,7 @@ $endif$
      * </pre>
      */
     def have(resultOfMessageWordApplication: ResultOfMessageWordApplication): MatcherFactory$arityPlusOne$[SC, $commaSeparatedTCNs$, Messaging] =
-      thisMatcherFactory.or(MatcherWords.not.apply(MatcherWords.have.message(resultOfMessageWordApplication.expectedMessage)))
+      thisMatcherFactory.or(MatcherWords.not.apply[SC, Messaging](MatcherWords.have.message(resultOfMessageWordApplication.expectedMessage)))
 
     /**
      * This method enables the following syntax given a <code>MatcherFactory$arity$</code>:
@@ -2408,7 +2414,7 @@ $endif$
      */
     def be[U](resultOfAnWordApplication: ResultOfAnWordToAnMatcherApplication[U]): MatcherFactory$arity$[SC with U, $commaSeparatedTCNs$] = thisMatcherFactory.or(MatcherWords.not.be(resultOfAnWordApplication))
 
-    import scala.language.experimental.macros
+    // import scala.language.experimental.macros
 
     /**
      * This method enables the following syntax given a <code>MatcherFactory$arity$</code>:
@@ -2418,7 +2424,8 @@ $endif$
      *                        ^
      * </pre>
      */
-    def be(aType: ResultOfATypeInvocation[_]): MatcherFactory$arity$[SC with AnyRef, $commaSeparatedTCNs$] = macro MatcherFactory$arity$.orNotATypeMatcherFactory$arity$[SC, $commaSeparatedTCNs$]
+    def be(aType: ResultOfATypeInvocation[_]): MatcherFactory$arity$[SC with AnyRef, $commaSeparatedTCNs$] =
+      ??? // macro MatcherFactory$arity$.orNotATypeMatcherFactory$arity$[SC, $commaSeparatedTCNs$]
 
     /**
      * This method enables the following syntax given a <code>MatcherFactory$arity$</code>:
@@ -2428,7 +2435,8 @@ $endif$
      *                        ^
      * </pre>
      */
-    def be(anType: ResultOfAnTypeInvocation[_]): MatcherFactory$arity$[SC with AnyRef, $commaSeparatedTCNs$] = macro MatcherFactory$arity$.orNotAnTypeMatcherFactory$arity$[SC, $commaSeparatedTCNs$]
+    def be(anType: ResultOfAnTypeInvocation[_]): MatcherFactory$arity$[SC with AnyRef, $commaSeparatedTCNs$] =
+      ??? // macro MatcherFactory$arity$.orNotAnTypeMatcherFactory$arity$[SC, $commaSeparatedTCNs$]
 
     /**
      * This method enables the following syntax given a <code>MatcherFactory$arity$</code>:
@@ -2810,7 +2818,11 @@ $endif$
      *                        ^
      * </pre>
      */
-    def matchPattern(right: PartialFunction[Any, _]) = macro MatchPatternMacro.orNotMatchPatternMatcher
+    def matchPattern(right: PartialFunction[Any, _]): Matcher[Any] =
+      Matcher { a =>
+        MatchResult(right.isDefinedAt(a), "MM Failure", "MM NegatedFailure")
+      }
+      // macro MatchPatternMacro.orNotMatchPatternMatcher
   }
 
   /**
@@ -2895,96 +2907,96 @@ private[scalatest] class MatcherFactory$arity$Macro[-SC, $typeConstructors$] {
 
   import scala.reflect.macros.Context
 
-  def andNotATypeMatcherFactory$arity$(context: Context)(aType: context.Expr[ResultOfATypeInvocation[_]]): context.Expr[MatcherFactory$arity$[SC with AnyRef, $commaSeparatedTCNs$]] = {
-    import context.universe._
+  def andNotATypeMatcherFactory$arity$(context: Context)(aType: context.Expr[ResultOfATypeInvocation[_]]): context.Expr[MatcherFactory$arity$[SC with AnyRef, $commaSeparatedTCNs$]] = { ???
+    // import context.universe._
 
-    val rhs = TypeMatcherMacro.notATypeMatcher(context)(aType)
+    // val rhs = TypeMatcherMacro.notATypeMatcher(context)(aType)
 
-    context.macroApplication match {
-      case Apply(Select(qualifier, _), _) =>
-        context.Expr(
-          Apply(
-            Select(
-              Select(
-                qualifier,
-                "owner"
-              ),
-              newTermName("and")
-            ),
-            List(rhs.tree)
-          )
-        )
-      case _ => context.abort(context.macroApplication.pos, "This macro should be used with 'and not' syntax only.")
-    }
+    // context.macroApplication match {
+    //   case Apply(Select(qualifier, _), _) =>
+    //     context.Expr(
+    //       Apply(
+    //         Select(
+    //           Select(
+    //             qualifier,
+    //             "owner"
+    //           ),
+    //           newTermName("and")
+    //         ),
+    //         List(rhs.tree)
+    //       )
+    //     )
+    //   case _ => context.abort(context.macroApplication.pos, "This macro should be used with 'and not' syntax only.")
+    // }
   }
 
-  def orNotATypeMatcherFactory$arity$(context: Context)(aType: context.Expr[ResultOfATypeInvocation[_]]): context.Expr[MatcherFactory$arity$[SC with AnyRef, $commaSeparatedTCNs$]] = {
-    import context.universe._
+  def orNotATypeMatcherFactory$arity$(context: Context)(aType: context.Expr[ResultOfATypeInvocation[_]]): context.Expr[MatcherFactory$arity$[SC with AnyRef, $commaSeparatedTCNs$]] = { ???
+    // import context.universe._
 
-    val rhs = TypeMatcherMacro.notATypeMatcher(context)(aType)
+    // val rhs = TypeMatcherMacro.notATypeMatcher(context)(aType)
 
-    context.macroApplication match {
-      case Apply(Select(qualifier, _), _) =>
-        context.Expr(
-          Apply(
-            Select(
-              Select(
-                qualifier,
-                "owner"
-              ),
-              newTermName("or")
-            ),
-            List(rhs.tree)
-          )
-        )
-      case _ => context.abort(context.macroApplication.pos, "This macro should be used with 'or not' syntax only.")
-    }
+    // context.macroApplication match {
+    //   case Apply(Select(qualifier, _), _) =>
+    //     context.Expr(
+    //       Apply(
+    //         Select(
+    //           Select(
+    //             qualifier,
+    //             "owner"
+    //           ),
+    //           newTermName("or")
+    //         ),
+    //         List(rhs.tree)
+    //       )
+    //     )
+    //   case _ => context.abort(context.macroApplication.pos, "This macro should be used with 'or not' syntax only.")
+    // }
   }
 
-  def andNotAnTypeMatcherFactory$arity$(context: Context)(anType: context.Expr[ResultOfAnTypeInvocation[_]]): context.Expr[MatcherFactory$arity$[SC with AnyRef, $commaSeparatedTCNs$]] = {
-    import context.universe._
+  def andNotAnTypeMatcherFactory$arity$(context: Context)(anType: context.Expr[ResultOfAnTypeInvocation[_]]): context.Expr[MatcherFactory$arity$[SC with AnyRef, $commaSeparatedTCNs$]] = { ???
+    // import context.universe._
 
-    val rhs = TypeMatcherMacro.notAnTypeMatcher(context)(anType)
+    // val rhs = TypeMatcherMacro.notAnTypeMatcher(context)(anType)
 
-    context.macroApplication match {
-      case Apply(Select(qualifier, _), _) =>
-        context.Expr(
-          Apply(
-            Select(
-              Select(
-                qualifier,
-                "owner"
-              ),
-              newTermName("and")
-            ),
-            List(rhs.tree)
-          )
-        )
-      case _ => context.abort(context.macroApplication.pos, "This macro should be used with 'and not' syntax only.")
-    }
+    // context.macroApplication match {
+    //   case Apply(Select(qualifier, _), _) =>
+    //     context.Expr(
+    //       Apply(
+    //         Select(
+    //           Select(
+    //             qualifier,
+    //             "owner"
+    //           ),
+    //           newTermName("and")
+    //         ),
+    //         List(rhs.tree)
+    //       )
+    //     )
+    //   case _ => context.abort(context.macroApplication.pos, "This macro should be used with 'and not' syntax only.")
+    // }
   }
 
-  def orNotAnTypeMatcherFactory$arity$(context: Context)(anType: context.Expr[ResultOfAnTypeInvocation[_]]): context.Expr[MatcherFactory$arity$[SC with AnyRef, $commaSeparatedTCNs$]] = {
-    import context.universe._
+  def orNotAnTypeMatcherFactory$arity$(context: Context)(anType: context.Expr[ResultOfAnTypeInvocation[_]]): context.Expr[MatcherFactory$arity$[SC with AnyRef, $commaSeparatedTCNs$]] = { ???
+    // import context.universe._
 
-    val rhs = TypeMatcherMacro.notAnTypeMatcher(context)(anType)
+    // val rhs = TypeMatcherMacro.notAnTypeMatcher(context)(anType)
 
-    context.macroApplication match {
-      case Apply(Select(qualifier, _), _) =>
-        context.Expr(
-          Apply(
-            Select(
-              Select(
-                qualifier,
-                "owner"
-              ),
-              newTermName("or")
-            ),
-            List(rhs.tree)
-          )
-        )
-      case _ => context.abort(context.macroApplication.pos, "This macro should be used with 'or not' syntax only.")
-    }
+    // context.macroApplication match {
+    //   case Apply(Select(qualifier, _), _) =>
+    //     context.Expr(
+    //       Apply(
+    //         Select(
+    //           Select(
+    //             qualifier,
+    //             "owner"
+    //           ),
+    //           newTermName("or")
+    //         ),
+    //         List(rhs.tree)
+    //       )
+    //     )
+    //   case _ => context.abort(context.macroApplication.pos, "This macro should be used with 'or not' syntax only.")
+    // }
   }
 
 }
